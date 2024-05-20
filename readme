@@ -1,0 +1,16 @@
+Design document for dnd dice roller so i don't have to remember all the modifiers
+
+The program needs to do the following:
+1. Read a file of some determined structure to understand the character
+    - the structure will be json since that is easy to parse
+    - Need to make template structure for it
+2. Generate random numbers between 0 and N possible values 
+    - the N is mostly going to be 20 but it could be larger or smaller
+3. Need to add modifier values based on the character 
+    - base modifer based on the character base stats
+        - strength
+        - dexterity
+        - constitution
+        - intelligence
+        - wisdom 
+        - charisma

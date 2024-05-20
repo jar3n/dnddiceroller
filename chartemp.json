@@ -1,0 +1,19 @@
+{
+    "character": {
+        "base-info" : {
+            "name": "x",
+            "level": "1",
+            "race": "human",
+            "alignment":"neutral good",
+            "experience points": "0"
+        },
+        "base-stats" : {
+            "strength": "10",
+            "dexerity": "10",
+            "constitution": "10",
+            "intelligence": "10",
+            "wisdom": "10",
+            "charisma": "10"
+        }
+    }
+}
