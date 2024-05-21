@@ -22,6 +22,7 @@ DNDHOME=$HOME/dndcode
 if [[ clean -eq 1 ]]; then
     rm -r $DNDHOME/build
 else
+    mkdir $DNDHOME/build
     g++ -o $DNDHOME/build/dndhello main.cc
 fi
 

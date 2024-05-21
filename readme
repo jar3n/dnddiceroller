@@ -3,6 +3,11 @@ Design document for dnd dice roller so i don't have to remember all the modifier
 The program needs to do the following:
 1. Read a file of some determined structure to understand the character
     - the structure will be json
+        - need to find a json c++ parser 
+            - options
+                - https://github.com/ibireme/yyjson
+                - https://simdjson.org/
+                - boost json library (picked this one)
     - a lot of the information is derived from the base stats 
         - base stats
             - strength
