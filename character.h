@@ -9,7 +9,7 @@ using namespace std;
 class Character {
     public:
     Character();
-    virtual ~Character();
+    ~Character();
 
     int getStrength();
     int getDexterity();
@@ -20,8 +20,6 @@ class Character {
 
     int getProficiency();
     int getExpertise();
-
-    void setBaseStats();
     
     int getHitPoints();
 
@@ -32,6 +30,14 @@ class Character {
     int getPassivePerception();
 
     private:
+
+    /*
+        look up the modifer 
+        for a base stat
+    */
+    int getModifier();
+
+
     /*
         Order of base stats:
         0. strength
@@ -127,6 +133,14 @@ class Character {
     int spellcasting_ability;
     int spell_save_dc;
     int spell_attack_bonus;
+
+    /*
+        Features
+    */
+    // TODO add a Feature class that contains
+    // proficiency/expertise bonuses
+    // description
+    vector<string> features;
 };
 
 #endif
