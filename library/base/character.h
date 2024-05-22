@@ -9,15 +9,22 @@ using namespace std;
 class Character {
     public:
 
-    Character(){}
+    Character(int level, int base_stats[6]){}
     virtual ~Character() = 0;
-
+    
     int getStrength();
     int getDexterity();
     int getConstitution();
     int getIntelligence();
     int getWisdom();
     int getCharisma();
+
+    int getStrengthMod();
+    int getDexterityMod();
+    int getConstitutionMod();
+    int getIntelligenceMod();
+    int getWisdomMod();
+    int getCharismaMod();
 
     int getProficiency();
     int getExpertise();
@@ -39,14 +46,6 @@ class Character {
     int getModifier(int base_stat);
 
     protected:
-    
-    void setStrength(int strength);
-    void setDexterity(int dexterity);
-    void setConstitution(int constitution);
-    void setIntelligence(int intelligence);
-    void setWisdom(int wisdom);
-    void setCharisma(int charisma);
-
     /*
         Order of base stats:
         0. strength
@@ -55,13 +54,19 @@ class Character {
         3. intelligence
         4. wisdom
         5. charisma
+
+        for simplicity these are the base stats before any 
+        ability score improvement features are applied
+        i.e. level 1 base stats
     */
     int base_stats[6];
 
     int level;
-    int hit_points;
     bool death_saves_success[3];
     bool death_saves_fails[3];
+
+    // based on the class
+    int hit_points;
 
     /* using a number where the least signifcant 18 bits 
      represent the dnd skill proficiency and expertise
@@ -86,9 +91,14 @@ class Character {
      0x08000 Sleight of Hand
      0x10000 Stealth
      0x20000 Survival
+
+     determined by background, class, race, and 
     */
     unsigned int proficient_skills;
     unsigned int expertise_skils;
+
+    // determined based on class
+    unsigned int proficient_saving_throws;
 
     /*
         Currencies:
@@ -139,6 +149,7 @@ class Character {
     // spell cost
     vector<string> spells;
 
+    // these are also determined by class in part
     int spellcasting_ability;
     int spell_save_dc;
     int spell_attack_bonus;

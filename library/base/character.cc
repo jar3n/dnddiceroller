@@ -1,5 +1,20 @@
 #include "character.h"
 
+
+Character::Character(int level, int base_stats[6]) :
+    death_saves_fails {false, false, false},
+    death_saves_success {false, false, false},
+    level(level)
+{
+    for (int i = 0; i < 6; i++){
+        this->base_stats[i] = base_stats[i];
+    }
+
+    
+}
+
+// getting base stats
+
 int Character::getStrength(){
     return base_stats[0];
 }
@@ -24,31 +39,35 @@ int Character::getCharisma(){
     return base_stats[5];
 }
 
-void Character::setStrength(int strength){
-    base_stats[0] = strength;
+// getting base stat modifiers
+
+int Character::getStrengthMod(){
+    return getModifier(base_stats[0]);
 }
 
-void Character::setDexterity(int dexterity){
-    base_stats[1] = dexterity;
+int Character::getDexterity(){
+    return getModifier(base_stats[1]);
 }
 
-void Character::setConstitution(int constitution){
-    base_stats[2] = constitution;
+int Character::getConstitution(){
+    return getModifier(base_stats[2]);
 }
 
-void Character::setIntelligence(int intelligence){
-    base_stats[3] = intelligence;
+int Character::getIntelligence(){
+    return getModifier(base_stats[3]);
 }
 
-void Character::setWisdom(int wisdom){
-    base_stats[4] = wisdom;
+int Character::getWisdom(){
+    return getModifier(base_stats[4]);
 }
 
-void Character::setCharisma(int charisma){
-    base_stats[5] = charisma;
+int Character::getCharisma(){
+    return getModifier(base_stats[5]);
 }
+
 
 int Character::getModifier(int base_stat){
     // maps the base stat to the appropiate base stat modifier
     return  -5 + ((10 + 5)/(30 - 1)) * (base_stat - 1);
 }
+

@@ -21,7 +21,7 @@ int main(int argc, char * argv[]){
     cout << "This is a random number: " << rand_val << "\n";
     cout << "This is a random d20 roll: " << d20_rand << "\n";
     
-    string charfile("/home/jenglander/dndcode/chartemp.json");
+    string charfile("/home/jenglander/dndcode/testfiles/chartemp.json");
     cout << "Reading in the following character file: " << charfile << "\n";
 
     ptree root;
