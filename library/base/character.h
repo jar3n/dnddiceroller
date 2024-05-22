@@ -8,8 +8,9 @@ using namespace std;
 
 class Character {
     public:
-    Character();
-    ~Character();
+
+    Character(){}
+    virtual ~Character() = 0;
 
     int getStrength();
     int getDexterity();
@@ -35,8 +36,16 @@ class Character {
         look up the modifer 
         for a base stat
     */
-    int getModifier();
+    int getModifier(int base_stat);
 
+    protected:
+    
+    void setStrength(int strength);
+    void setDexterity(int dexterity);
+    void setConstitution(int constitution);
+    void setIntelligence(int intelligence);
+    void setWisdom(int wisdom);
+    void setCharisma(int charisma);
 
     /*
         Order of base stats:
