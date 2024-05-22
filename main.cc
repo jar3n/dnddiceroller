@@ -11,7 +11,7 @@ using namespace boost::property_tree;
 int main(int argc, char * argv[]){
     // TODO
     // have a main while loop 
-        // with a way to safely get out
+    // with a way to safely get out
     // have a function that prompts for a character file
     // have a function that generates a random number
     srand(time(nullptr));
