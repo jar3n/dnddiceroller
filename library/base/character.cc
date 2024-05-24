@@ -9,7 +9,6 @@ Character::Character(int level, int base_stats[6]) :
     for (int i = 0; i < 6; i++){
         this->base_stats[i] = base_stats[i];
     }
-
     
 }
 
@@ -45,29 +44,30 @@ int Character::getStrengthMod(){
     return getModifier(base_stats[0]);
 }
 
-int Character::getDexterity(){
+int Character::getDexterityMod(){
     return getModifier(base_stats[1]);
 }
 
-int Character::getConstitution(){
+int Character::getConstitutionMod(){
     return getModifier(base_stats[2]);
 }
 
-int Character::getIntelligence(){
+int Character::getIntelligenceMod(){
     return getModifier(base_stats[3]);
 }
 
-int Character::getWisdom(){
+int Character::getWisdomMod(){
     return getModifier(base_stats[4]);
 }
 
-int Character::getCharisma(){
+int Character::getCharismaMod(){
     return getModifier(base_stats[5]);
 }
-
 
 int Character::getModifier(int base_stat){
     // maps the base stat to the appropiate base stat modifier
     return  -5 + ((10 + 5)/(30 - 1)) * (base_stat - 1);
 }
+
+
 

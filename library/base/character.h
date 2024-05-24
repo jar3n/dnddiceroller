@@ -9,8 +9,8 @@ using namespace std;
 class Character {
     public:
 
-    Character(int level, int base_stats[6]){}
-    virtual ~Character() = 0;
+    Character(int level, int base_stats[6]);
+    virtual ~Character(){};
     
     int getStrength();
     int getDexterity();
@@ -68,37 +68,7 @@ class Character {
     // based on the class
     int hit_points;
 
-    /* using a number where the least signifcant 18 bits 
-     represent the dnd skill proficiency and expertise
-     0 means not proficient
-     1 means proficient
-     list of the bits and their significance
-     0x00001 Acrobatics
-     0x00002 Animal Handling
-     0x00004 Arcana
-     0x00008 Athletics
-     0x00010 Deception
-     0x00020 History
-     0x00040 Insight
-     0x00080 Intimidation
-     0x00100 Investigation
-     0x00200 Medicine
-     0x00400 Nature
-     0x00800 Perception
-     0x01000 Performance
-     0x02000 Persuasion
-     0x04000 Religion
-     0x08000 Sleight of Hand
-     0x10000 Stealth
-     0x20000 Survival
-
-     determined by background, class, race, and 
-    */
-    unsigned int proficient_skills;
-    unsigned int expertise_skils;
-
-    // determined based on class
-    unsigned int proficient_saving_throws;
+    int inspiration;
 
     /*
         Currencies:
