@@ -7,6 +7,7 @@
 // my stuff
 #include "library/base/dice.h"
 #include "library/base/skill.h"
+#include "library/base/weapon.h"
 
 using namespace std;
 using namespace boost::property_tree;
@@ -48,6 +49,9 @@ int main(int argc, char * argv[]){
         cout << e.what() << "\n";
     }
     
+    Weapon * testWeapon = new Weapon("test weapon", 10, 6, 3, "stabbing", 12, 5, {"thrown", "simple", "light"});
+    cout << testWeapon->getDetails();
+    cout << "Rolling damage with " << testWeapon->getName() << ": " << testWeapon->rollDamage() << "\n";
 
     string charfile("/home/jenglander/dndcode/testfiles/chartemp.json");
     cout << "Reading in the following character file: " << charfile << "\n";
