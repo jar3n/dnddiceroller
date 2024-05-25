@@ -23,6 +23,6 @@ if [[ clean -eq 1 ]]; then
     rm -r $DNDHOME/build
 else
     mkdir $DNDHOME/build
-    g++ -o $DNDHOME/build/dndhello main.cc
+    g++ -o $DNDHOME/build/dndhello -include library/base/dice.h library/base/dice.cc main.cc
 fi
 
