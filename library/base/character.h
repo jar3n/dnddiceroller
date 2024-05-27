@@ -25,15 +25,15 @@ class Character {
     int getIntelligenceMod();
     int getWisdomMod();
     int getCharismaMod();
-
-    int getProficiency();
-    int getExpertise();
     
-    int getHitPoints();
+    string getHitPoints();
+    string takeDamage(int damage);
+    string heal(int health);
 
-    bool * getDeathSaves();
+    string getDeathSaves();
+    string rollDeathSave();
 
-    vector<string> getEquipment();
+    // vector<string> getEquipment();
 
     int getPassivePerception();
 
@@ -62,11 +62,13 @@ class Character {
     int base_stats[6];
 
     int level;
-    bool death_saves_success[3];
-    bool death_saves_fails[3];
+    int death_saves_success;
+    int death_saves_fails;
 
     // based on the class
     int hit_points;
+    int max_hit_points;
+    int temp_hit_points;
 
     int inspiration;
 
@@ -81,6 +83,7 @@ class Character {
     int money[5];
 
     // just character info no actual affect on rolls
+    string name;
     string personality_traits;
     string ideals;
     string bonds;
