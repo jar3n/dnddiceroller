@@ -22,54 +22,40 @@ Character::Character(int level, int base_stats[6]) :
 
 // getting base stats
 
-int Character::getStrength(){
+int Character::strength(){
     return base_stats[0];
 }
 
-int Character::getDexterity(){
+int Character::dexterity(){
     return base_stats[1];
 }
 
-int Character::getConstitution(){
+int Character::constitution(){
     return base_stats[2];
 }
 
-int Character::getIntelligence(){
+int Character::intelligence(){
     return base_stats[3];
 }
 
-int Character::getWisdom(){
+int Character::wisdom(){
     return base_stats[4];
 }
 
-int Character::getCharisma(){
+int Character::charisma(){
     return base_stats[5];
 }
 
-// getting base stat modifiers
-
-int Character::getStrengthMod(){
-    return getModifier(base_stats[0]);
-}
-
-int Character::getDexterityMod(){
-    return getModifier(base_stats[1]);
-}
-
-int Character::getConstitutionMod(){
-    return getModifier(base_stats[2]);
-}
-
-int Character::getIntelligenceMod(){
-    return getModifier(base_stats[3]);
-}
-
-int Character::getWisdomMod(){
-    return getModifier(base_stats[4]);
-}
-
-int Character::getCharismaMod(){
-    return getModifier(base_stats[5]);
+string Character::getAbilityScoresAndModifiers()
+{
+    string abilityandmodsmsg = name + " has the following ability scores and modifiers:\n";
+    abilityandmodsmsg += "\tStrength " + to_string(strength()) + " => Mod: " + to_string(getModifier(strength())) + "\n"; 
+    abilityandmodsmsg += "\tDexterity " + to_string(dexterity()) + " => Mod: " + to_string(getModifier(dexterity())) + "\n";
+    abilityandmodsmsg += "\tConstitution " + to_string(constitution()) + " => Mod: " + to_string(getModifier(constitution())) + "\n";
+    abilityandmodsmsg += "\tIntelligence " + to_string(intelligence()) + " => Mod: " + to_string(getModifier(intelligence())) + "\n";
+    abilityandmodsmsg += "\tWisdom " + to_string(wisdom()) + " => Mod: " + to_string(getModifier(wisdom())) + "\n";
+    abilityandmodsmsg += "\tCharisma " + to_string(charisma()) + " => Mod: " + to_string(getModifier(charisma())) + "\n";
+    return string();
 }
 
 string Character::getHitPoints()
@@ -135,6 +121,18 @@ string Character::rollDeathSave()
         death_saves_fails++;
     }
     return getDeathSaves();
+}
+
+string Character::getMoney()
+{
+    string moneyStatus = name + " has the following amounts of coin:\n";
+    moneyStatus += "Copper Pieces: " + to_string(money[0]) + "\n";
+    moneyStatus += "Silver Pieces: " + to_string(money[1]) + "\n";
+    moneyStatus += "Electrum Pieces: " + to_string(money[2]) + "\n";
+    moneyStatus += "Gold Pieces: " + to_string(money[3]) + "\n";
+    moneyStatus += "Platinum Pieces: " + to_string(money[4]) + "\n";
+    
+    return moneyStatus;
 }
 
 int Character::getModifier(int base_stat){

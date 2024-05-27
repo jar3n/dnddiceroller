@@ -11,20 +11,8 @@ class Character {
 
     Character(int level, int base_stats[6]);
     virtual ~Character(){};
-    
-    int getStrength();
-    int getDexterity();
-    int getConstitution();
-    int getIntelligence();
-    int getWisdom();
-    int getCharisma();
 
-    int getStrengthMod();
-    int getDexterityMod();
-    int getConstitutionMod();
-    int getIntelligenceMod();
-    int getWisdomMod();
-    int getCharismaMod();
+    string getAbilityScoresAndModifiers();
     
     string getHitPoints();
     string takeDamage(int damage);
@@ -33,9 +21,13 @@ class Character {
     string getDeathSaves();
     string rollDeathSave();
 
+    string getMoney();
+    // string buyItem();
+    // string sellItem();
+
     // vector<string> getEquipment();
 
-    int getPassivePerception();
+    // int getPassivePerception();
 
     private:
 
@@ -44,6 +36,14 @@ class Character {
         for a base stat
     */
     int getModifier(int base_stat);
+
+    // short cut functions for accessing the ability scores
+    int strength();
+    int dexterity();
+    int constitution();
+    int intelligence();
+    int wisdom();
+    int charisma();
 
     protected:
     /*
@@ -54,10 +54,6 @@ class Character {
         3. intelligence
         4. wisdom
         5. charisma
-
-        for simplicity these are the base stats before any 
-        ability score improvement features are applied
-        i.e. level 1 base stats
     */
     int base_stats[6];
 
