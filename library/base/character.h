@@ -92,11 +92,11 @@ class Character {
     string eye_color;
     string skin_color;
     string hair_color;
-
     
     // TODO add Background class 
     // background class provides proficiencies 
     // to the character
+    // and determines size
 
     // TODO add an equipment 
     // class for equipment items so that 
