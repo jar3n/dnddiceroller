@@ -158,14 +158,94 @@ class MagicArmor : public MagicItem {
     virtual string getDescription();
 };
 
-// add the following kinds of items
-// weapon
-// magic and not
-// there are other types of magic items, but they arent special like 
-// armor or weapons so they can be types basically
-// despite some potions being magical items none are attunable so i will not list them here
+typedef enum WeaponCategory {
+    simple,
+    martial
+};
 
+typedef enum DamageType {
+    acid,
+    bludgeoning,
+    cold,
+    fire,
+    force,
+    lightning,
+    necrotic,
+    piercing,
+    poison,
+    psychic,
+    radiant,
+    slashing,
+    thunder
+};
 
+class Weapon : public EquippableItem {
+    private:
+        DamageType damageType;
+        int damageDice;
+        int numDamageDice;
+        WeaponCategory category;
+        // ranged weapon property values
+        bool ammunition;
+        int ammunitionAmount;
+        int silveredAmmunitionAmount;
+        bool loading;
+        bool range;
+        int normalRange;
+        int longRange;
+        // finesse property values
+        bool finesse;
+        bool useStrengthOrDex; // strength is false, dex is true
+
+        bool heavy;
+        bool light;
+
+        bool reach;
+        bool thrown;
+        bool twoHanded;
+
+        // versitile weapon proprtly values
+        bool versitile;
+        int twoHandedDamage;
+
+        // improvised is fun because it has a few meanings
+        // 1. pick up something from the ground and treat it 
+        // like another weapon
+        // 2. it could be a ranged weapon used as a melee weapon or 
+        // a thrown melee weapon without the thrown property
+        // for ranged weapon used as a melee weapon it does 1d4 damage
+        // for a melee weapon thrown without thrown property it does 1d4 damage
+        // the range for a improvised thrown melee weapon is 20 normal and 60 long
+        bool improvised;
+        bool silvered;
+
+    public:
+        Weapon(DamageType damageType, 
+               int damageDice,
+               int numDamageDice,
+               WeaponCategory category,
+               bool ranged = false, 
+               bool loading = false,
+               bool ammunition = false, 
+               int ammunitionAmount = 0,
+               int silveredAmmunitionAmount = 0,
+               int normalRange = 0,
+               int longRange = 0,
+               bool finess = false,
+               bool useStrengthOrDex = false,
+               bool heavy = false,
+               bool light = false,
+               bool reach = false,
+               bool thrown = false,
+               bool twoHanded = false,
+               bool versitile = false, 
+               int twoHandedDamage = 0,
+               bool improvised = false,
+               bool silvered = false);
+
+        
+
+};
 
 
 
