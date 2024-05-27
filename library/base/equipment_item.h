@@ -94,10 +94,71 @@ typedef MagicItemWithCharges Wand;
 typedef MagicItem Scroll;
 typedef MagicItem WonderousItem;
 
+typedef enum ArmorWeightClass {
+    none = 0,
+    light = 1,
+    medium = 2,
+    heavy = 3
+};
+
+class Armor : public EquippableItem {
+    private:
+        ArmorWeightClass awc;
+        int baseArmorClass;
+        int minimumStr;
+        bool stealthDisadvantage;
+        bool hasDexModCap;
+        int dexModCap;
+
+    public:
+    Armor(string name,
+          int cost,
+          int weight,
+          string description, 
+          bool equipped = false,
+          ArmorWeightClass awc = none,
+          int baseArmorClass = 10,
+          int minimumStr = 0,
+          bool stealthDisadvantage = false,
+          bool hasDexModCap = false,
+          int dexModCap = 2);
+
+    virtual string getDescription();
+    int getBaseArmorClass();
+    int getMinimumStr();
+    bool hasStealthDisadvantage();
+    bool doesHaveDexModCap();
+    int getDexModCap();
+
+};
+
+class MagicArmor : public MagicItem {
+    private:
+        ArmorWeightClass awc;
+        int baseArmorClass;
+        int minimumStr;
+        bool stealthDisadvantage;
+        bool hasDexModCap;
+        int dexModCap;    
+
+    public:
+    MagicArmor(string name,
+               int cost,
+               int weight,
+               string description, 
+               bool equipped = false,
+               bool attuned = false, 
+               ArmorWeightClass awc = none,
+               int baseArmorClass = 10,
+               int minimumStr = 0,
+               bool stealthDisadvantage = false,
+               bool hasDexModCap = false,
+               int dexModCap = 2);
+
+    virtual string getDescription();
+};
 
 // add the following kinds of items
-// armor
-// magic and not 
 // weapon
 // magic and not
 // there are other types of magic items, but they arent special like 

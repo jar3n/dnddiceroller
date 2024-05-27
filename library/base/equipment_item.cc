@@ -151,3 +151,95 @@ string MagicItemWithCharges::getDescription()
     equipmentDescription += description + "\n";
     return equipmentDescription;
 }
+
+Armor::Armor(string name, 
+             int cost, 
+             int weight, 
+             string description, 
+             bool equipped, 
+             ArmorWeightClass awc, 
+             int baseArmorClass, 
+             int minimumStr, 
+             bool stealthDisadvantage, 
+             bool hasDexModCap, 
+             int dexModCap) :
+             EquippableItem(name, cost, weight, description, equipped),
+             awc(awc),
+             baseArmorClass(baseArmorClass),
+             minimumStr(minimumStr),
+             stealthDisadvantage(stealthDisadvantage),
+             hasDexModCap(hasDexModCap),
+             dexModCap(dexModCap)
+{
+}
+
+string Armor::getDescription()
+{
+    string equippedStatus = equipped ? "yes" : "no";
+    string equipmentDescription = name + ":\n";
+    equipmentDescription += "Cost: " + to_string(cost) + "\n";
+    equipmentDescription += "Weight: " + to_string(weight) + "\n";
+    equipmentDescription += "Equipped: " + equippedStatus + "\n";
+    equipmentDescription += "Base Armor Class: " + to_string(baseArmorClass) + "\n";
+    if (hasDexModCap) equipmentDescription += "Dexterity Modifier Cap: " + to_string(dexModCap) + "\n";
+    if (stealthDisadvantage) equipmentDescription += "Armor has a Stealth Disadvantage.\n";
+    equipmentDescription += description + "\n";
+    return equipmentDescription;
+}
+
+int Armor::getBaseArmorClass()
+{
+    return baseArmorClass;
+}
+
+int Armor::getMinimumStr()
+{
+    return minimumStr;
+}
+
+bool Armor::hasStealthDisadvantage()
+{
+    return stealthDisadvantage;
+}
+
+bool Armor::doesHaveDexModCap()
+{
+    return hasDexModCap;
+}
+
+int Armor::getDexModCap()
+{
+    return dexModCap;
+}
+
+MagicArmor::MagicArmor(string name,
+                       int cost,
+                       int weight,
+                       string description, 
+                       bool equipped = false,
+                       bool attuned = false, 
+                       ArmorWeightClass awc = none,
+                       int baseArmorClass = 10,
+                       int minimumStr = 0,
+                       bool stealthDisadvantage = false,
+                       bool hasDexModCap = false,
+                       int dexModCap = 2) :
+                       MagicItem(name, cost, weight, description, equipped, attuned)
+{
+}
+
+string MagicArmor::getDescription()
+{
+    string equippedStatus = equipped ? "yes" : "no";
+    string attunedStatus = attuned ? "yes" : "no";
+    string equipmentDescription = name + ":\n";
+    equipmentDescription += "Cost: " + to_string(cost) + "\n";
+    equipmentDescription += "Weight: " + to_string(weight) + "\n";
+    equipmentDescription += "Equipped: " + equippedStatus + "\n";
+    equipmentDescription += "Attuned: " + attunedStatus + "\n";
+    equipmentDescription += "Base Armor Class: " + to_string(baseArmorClass) + "\n";
+    if (hasDexModCap) equipmentDescription += "Dexterity Modifier Cap: " + to_string(dexModCap) + "\n";
+    if (stealthDisadvantage) equipmentDescription += "Armor has a Stealth Disadvantage.\n";
+    equipmentDescription += description + "\n";
+    return equipmentDescription;
+}
