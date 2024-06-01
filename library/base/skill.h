@@ -3,10 +3,7 @@
 
 #include <string>
 
-#include "dice.h"
-
 using namespace std;
-using namespace dnd;
 
 class SkillException : public exception {
     private:
@@ -37,8 +34,6 @@ class Skill {
             bool hasExpertise);
         ~Skill(){}
 
-        int rollSkill();
-
         int getModifier();
 
         bool isProficient();
@@ -52,8 +47,6 @@ class Skill {
         bool proficient;
         bool expert;
         int proficiency_bonus;
-
-        Dice * skillDice;
 };
 
 #endif

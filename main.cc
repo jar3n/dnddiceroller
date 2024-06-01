@@ -9,7 +9,6 @@
 // my stuff
 #include "library/base/dice.h"
 #include "library/base/skill.h"
-#include "library/base/weapon.h"
 
 using namespace std;
 using namespace boost::property_tree;

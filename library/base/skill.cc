@@ -19,8 +19,6 @@ expert(hasExpertise) {
     } else {
         modifier = base_stat_modifier;
     }
-
-    skillDice = new Dice();
 }
 
 int Skill::getModifier(){
@@ -38,8 +36,3 @@ bool Skill::hasExpertise(){
 string Skill::getName(){
     return name;
 }
-
-int Skill::rollSkill(){
-    return skillDice->rolld20() + modifier;
-}
-
