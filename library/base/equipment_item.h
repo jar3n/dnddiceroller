@@ -220,6 +220,7 @@ class Weapon : public EquippableItem {
         bool improvised;
         bool silvered;
 
+    protected:
         // enum helper functions
         string getWeaponDamageType();
         string getWeaponCategory();
@@ -272,54 +273,10 @@ class Weapon : public EquippableItem {
 
 };
 
-class MagicWeapon : public MagicItem {
+class MagicWeapon : public Weapon {
     private:
-        DamageType damageType;
-        int damageDice;
-        int numDamageDice;
-        WeaponCategory category;
-
-        // ranged weapon property values
-        bool ammunition;
-        int ammunitionAmount;
-        int silveredAmmunitionAmount;
-        bool loading;
-        bool range;
-        int normalRange;
-        int longRange;
-
-        // finesse property values
-        bool finesse;
-
-        bool heavy;
-        bool light;
-
-        bool reach;
-        bool thrown;
-        bool twoHanded;
-
-        // versitile weapon proprtly values
-        bool versitile;
-        int twoHandedDamage;
-
-        // improvised is fun because it has a few meanings
-        // 1. pick up something from the ground and treat it 
-        // like another weapon
-        // 2. it could be a ranged weapon used as a melee weapon or 
-        // a thrown melee weapon without the thrown property
-        // for ranged weapon used as a melee weapon it does 1d4 damage
-        // for a melee weapon thrown without thrown property it does 1d4 damage
-        // the range for a improvised thrown melee weapon is 20 normal and 60 long
-        bool improvised;
-        bool silvered;
-
-        // enum helper functions
-        string getWeaponDamageType();
-        string getWeaponCategory();
-        string getWeaponProperties();
-        string getRange(); // string is "ranged (normalrange/longrange)"
-
-
+        bool attuned;
+        
     public:
         MagicWeapon(string name,
                int cost,
@@ -338,8 +295,7 @@ class MagicWeapon : public MagicItem {
                int silveredAmmunitionAmount = 0,
                int normalRange = 0,
                int longRange = 0,
-               bool finess = false,
-               bool useStrengthOrDex = false,
+               bool finesse = false,
                bool heavy = false,
                bool light = false,
                bool reach = false,
@@ -352,18 +308,7 @@ class MagicWeapon : public MagicItem {
 
         virtual string getDescription();
 
-        int getAmmunition(bool silvered); // returns both regular and silvered ammunition
-        void useAmmunition(bool silvered); // uses ammunition if its a ranged weapon
-        void restockAmmunition(bool silvered, int numToRestock);
-        void convertToSilverAmmunition(int numToConvert);
-        int getNormalRange();
-        int getLongRange();
-        bool isRanged(); // returns whether this is a ranged weapon (,a thrown melee weapon) or a melee weapon
-
-        bool isFinesse();
-        
-        bool isVersitile();
-        int useTwoHandsDamage(bool choice); // if false use single hand attack
+        void attune();
 
 
 };

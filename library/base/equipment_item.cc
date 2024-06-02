@@ -468,3 +468,60 @@ int Weapon::useTwoHandsDamage(bool choice)
         throw EquipmentException(name, "is not a versitile weapon.");
     }
 }
+
+MagicWeapon::MagicWeapon(string name, 
+                         int cost, 
+                         int weight, 
+                         string description, 
+                         bool equipped,
+                         bool attuned, 
+                         DamageType damageType, 
+                         int damageDice, 
+                         int numDamageDice, 
+                         WeaponCategory category, 
+                         bool ranged, 
+                         bool loading, 
+                         bool ammunition, 
+                         int ammunitionAmount, 
+                         int silveredAmmunitionAmount, 
+                         int normalRange, 
+                         int longRange, 
+                         bool finesse, 
+                         bool heavy, 
+                         bool light, 
+                         bool reach, 
+                         bool thrown, 
+                         bool twoHanded, 
+                         bool versitile, 
+                         int twoHandedDamage, 
+                         bool improvised, 
+                         bool silvered) :
+                         Weapon(name, cost, weight, description, equipped, damageType, damageDice, numDamageDice, category, ranged, loading, ammunition, ammunitionAmount, silveredAmmunitionAmount, normalRange, longRange, finesse, heavy, light, reach, thrown, twoHanded, versitile, twoHandedDamage, improvised, silvered),
+                         attuned(attuned)
+{
+}
+
+string MagicWeapon::getDescription()
+{
+    string equippedStatus = equipped ? "yes" : "no"; 
+    string attunedStatus = attuned ? "yes" : "no"; 
+    string equipmentDescription = name + ":\n";
+    equipmentDescription += "Cost: " + to_string(cost) + "\n";
+    equipmentDescription += "Weight: " + to_string(weight) + "\n";
+    equipmentDescription += "Category: " + getWeaponCategory() + "\n";
+    equipmentDescription += "Damge Type" + getWeaponDamageType()  + "\n";
+    equipmentDescription += "Properties: " + getWeaponProperties() +"\n";
+    equipmentDescription += "Equipped: " + equippedStatus + "\n";
+    equipmentDescription += "Attuned: " + attunedStatus + "\n";
+    equipmentDescription += description + "\n";
+    return equipmentDescription;
+}
+
+void MagicWeapon::attune()
+{
+    if (!equipped){
+        throw EquipmentException(name, "cannot be attuned when not equipped.");
+    } else {
+        attuned = true;
+    }
+}
