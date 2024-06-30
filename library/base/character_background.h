@@ -9,8 +9,6 @@ using namespace std;
 class Background {
     public:
     Background();
-    ~Background();
-
     
 
     private:

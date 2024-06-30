@@ -2,7 +2,10 @@
 #define _CHARACTER_H_
 
 #include <string>
-#include <vector>
+#include <map>
+
+#include "equipment_item.h"
+#include "skill.h"
 
 using namespace std;
 
@@ -22,10 +25,13 @@ class Character {
     string rollDeathSave();
 
     string getMoney();
-    // string buyItem();
-    // string sellItem();
+    void buyItem(int cashInvested, EquipmentItem item);
+    void sellItem(int cashEarned, EquipmentItem item);
+    void addItem(EquipmentItem item);
+    void discardItem(string itemName);
+    void attuneToItem(string name);
+    void equipItem(string name);
 
-    // vector<string> getEquipment();
 
     // int getPassivePerception();
 
@@ -101,7 +107,8 @@ class Character {
     // TODO add an equipment 
     // class for equipment items so that 
     // you can store descriptions and amounts of equipment items
-    vector<string> equipment;
+    map<string, EquipmentItem*> equipment;
+    vector<string> attunedItems;
 
     // TODO add race class 
     // race determines speed
@@ -116,7 +123,7 @@ class Character {
     // contains descriptions, damange types, DC save values
     // base spell slot (i.e. the lowest spell slot to cast the spell at)
     // spell cost
-    vector<string> spells;
+    map<string, string> spells;
 
     // these are also determined by class in part
     int spellcasting_ability;
