@@ -1,6 +1,24 @@
 Design document for dnd dice roller so i don't have to remember all the modifiers
 
-The program needs to do the following:
+The program needs to do the following: (SIMPLE EDITION)
+
+1. have a good interface for rolling dice
+    a. plan to use the boost argument parser library for that
+    b. I have a dice class to use for that. 
+    c. there is one command, roll dice 
+        - Goals: 
+            - generate a random number in the given range
+            - roll advantage and disadvantage
+            - roll with modifiers
+
+WILL FOLD IN MORE GOALS LATER TO BUILD UP TO CHARACTER BASED DICE ROLLS
+
+
+
+
+
+
+THESE ARE LOFTY GOALS RIGHT NOW SO POSTPONED:
 1. Read a file of some determined structure to understand the character
     - the structure will be json
         - need to find a json c++ parser 
