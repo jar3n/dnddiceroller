@@ -23,7 +23,7 @@ if [[ clean -eq 1 ]]; then
     rm -r $DNDHOME/build
 else
     mkdir $DNDHOME/build
-    g++ -std=c++11 -o $DNDHOME/build/dndhello -include \
+    g++ -std=c++11 -o $DNDHOME/build/dnddice -include \
         library/base/dice.h \
         library/base/dice.cc \
         main.cc \
