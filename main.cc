@@ -10,7 +10,6 @@ using namespace std;
 int main(int argc, char * argv[]){
     Dice *d = new Dice();
 
-    
     try {
         po::options_description desc("Options");
 
