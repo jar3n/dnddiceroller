@@ -23,6 +23,14 @@ if [[ clean -eq 1 ]]; then
     rm -r $DNDHOME/build
 else
     mkdir $DNDHOME/build
-    g++ -std=c++11 -o $DNDHOME/build/dndhello -include  library/base/weapon.h library/base/weapon.cc library/base/skill.h library/base/skill.cc  library/base/dice.h library/base/dice.cc main.cc -l boost_program_options
+    g++ -std=c++11 -o $DNDHOME/build/dndhello -include  \
+        library/base/weapon.h \
+        library/base/weapon.cc \
+        library/base/skill.h \
+        library/base/skill.cc  \
+        library/base/dice.h \
+        library/base/dice.cc \
+        main.cc \
+        -l boost_program_options
 fi
 
