@@ -6,6 +6,21 @@
 
 namespace po = boost::program_options;
 using namespace std;
+ class optionsException : public exception{
+    public:
+    optionsException(string msg) :
+    _msg(msg){}
+
+    
+
+    string what(){
+        return "options error: " + _msg;
+    }
+
+    private:
+    string _msg;
+
+};
 
 
 int main(int argc, char * argv[]){
@@ -16,7 +31,9 @@ int main(int argc, char * argv[]){
 
         desc.add_options() 
             ("help", "produce help message")
-            ("roll", po::value<int>()->default_value(20), "roll a dice with provided max value");
+            ("roll", po::value<int>()->default_value(20), "roll a dice with provided max value")
+            ("adv", po::value<bool>()->default_value(false), "roll with advantage")
+            ("dis", po::value<bool>()->default_value(false), "roll with disadvantage");
         
         
         po::variables_map vm;
@@ -31,6 +48,11 @@ int main(int argc, char * argv[]){
             cout << desc << endl;
         } else if (vm.count("roll")){
             int diceMaxVal = vm["roll"].as<int>();
+            bool advantage = vm["advantage"].as<bool>();
+            bool disadvantage = vm["disadvantage"].as<bool>();
+            if (advantage && disadvantage){
+                throw optionsException("cannot use both --adv and --dis options must pick one.");
+            }
             cout << "Rolled a d" << diceMaxVal << " : " << d->rolldX(diceMaxVal) << endl;
         }
 
