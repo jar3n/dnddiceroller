@@ -9,6 +9,7 @@
 
 namespace po = boost::program_options;
 using namespace std;
+
 class optionsException : public exception{
     public:
         optionsException(string msg) :
@@ -37,23 +38,64 @@ string applyMod(int roll, int mod){
 
 static string character_ledger_path = "./build/character_ledger";
 
+void listCharacters(dnd::character_ledger ledger){
+    for (int i = 0; i < ledger.characters_size(); i++){
+        cout << ledger.characters(i).name() << endl;
+    }
+}
+
+void createCharacter(dnd::character_ledger ledger){
+    string name;
+    cout << "Welcome to the Character Creator:" << endl;   
+    cout << "Enter a Name for your Character: ";
+    getline(cin, name);
+    if (name.empty()){
+        cout << "Character must have a name." << endl;
+    } else {
+        cout << "Adding a character named: " << name << endl;
+        dnd::character * new_character = ledger.add_characters();
+        new_character->set_name(name);
+    }
+
+    while (true){
+        string resp;
+        cout << "Would you like to add another character? (y or n) ";
+        getline(cin,resp);
+        if (resp == "n"){
+            cout << "Exiting Character Creator." << endl;
+            break;
+        } else if (resp != "y" || resp != "n"){
+            cout << "Received Invalid Response exiting Character Creator." << endl;
+        } else {
+            cout << "Enter a Name for your Character: ";
+            getline(cin, name);
+            if (name.empty()){
+                cout << "Character must have a name." << endl;
+            } else {
+                cout << "Adding a character named: " << name << endl;
+                dnd::character * new_character = ledger.add_characters();
+                new_character->set_name(name);
+                fstream output(character_ledger_path, ios::out | ios::binary | ios::trunc);
+                if (!ledger.SerializeToOstream(&output)){
+                    cout << "Failed to write to ledger. Check it exists in " << character_ledger_path << endl;
+                }
+            }
+        }
+    }
+}
+
 void accessCharacterLedger(void(*ledgerOperation)(dnd::character_ledger)){
     dnd::character_ledger ledger;
     fstream input(character_ledger_path, ios::in | ios::binary);
     if (!input){
-        cout << "You have not created a Character ledger. Run the create character option to create the ledger and a character." << endl;
+        cout << "You have not created a Character ledger, Loading Character Creator to create one." << endl;
+        createCharacter(ledger);
     } else if (!ledger.ParseFromIstream(&input)){
         throw optionsException("Failed to parse the characters ledger.");
     } else if (ledger.characters_size() == 0){
         cout << "There are no characters in the character ledger. Run the create character option to create one." << endl;
     } else {
         ledgerOperation(ledger);
-    }
-}
-
-void listCharacters(dnd::character_ledger ledger){
-    for (int i = 0; i < ledger.characters_size(); i++){
-        cout << ledger.characters(i).name() << endl;
     }
 }
 
@@ -106,7 +148,7 @@ int main(int argc, char * argv[]){
         } else if (vm.count("list_characters")){
             accessCharacterLedger(listCharacters);
         } else if (vm.count("create_character")){
-            cout << "To be Implemented in new feature." << endl;
+            accessCharacterLedger(createCharacter);
         }
     } catch (optionsException &e){
         cout << e.what() << endl;
