@@ -4,8 +4,16 @@
 #include <random>
 
 using namespace std;
+struct dice_res {
+    int roll_1;
+    int roll_2;
+    int max_roll;
+    int min_roll;
+};
+typedef struct dice_res dice_res;
 
 class Dice {
+        
     public:
         Dice();
         int rolld4();
@@ -16,6 +24,9 @@ class Dice {
         int rolld20();
         int rolld100();
         int rolldX(int cap);
+        dice_res doubleRoll(int cap);
+
+
 
     private:
         random_device rd;
