@@ -33,6 +33,6 @@ else
         main.cc \
         -l boost_program_options \
         -l protoc \
-        -l protobuf
+        -l protobuf 
 fi
 

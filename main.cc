@@ -36,15 +36,15 @@ string applyMod(int roll, int mod){
     return ss.str();
 }
 
-static string character_ledger_path = "./build/character_ledger";
-
-void listCharacters(dnd::character_ledger ledger){
+bool listCharacters(dnd::character_ledger & ledger){
+    cout << "Available Characters:" << endl;
     for (int i = 0; i < ledger.characters_size(); i++){
         cout << ledger.characters(i).name() << endl;
     }
+    return false; // does not write to ledger
 }
 
-void createCharacter(dnd::character_ledger ledger){
+bool createCharacter(dnd::character_ledger & ledger){
     string name;
     cout << "Welcome to the Character Creator:" << endl;   
     cout << "Enter a Name for your Character: ";
@@ -61,12 +61,10 @@ void createCharacter(dnd::character_ledger ledger){
         string resp;
         cout << "Would you like to add another character? (y or n) ";
         getline(cin,resp);
-        if (resp == "n"){
+        if (resp.compare("n") == 0){
             cout << "Exiting Character Creator." << endl;
             break;
-        } else if (resp != "y" || resp != "n"){
-            cout << "Received Invalid Response exiting Character Creator." << endl;
-        } else {
+        } else if (resp.compare("y") == 0){
             cout << "Enter a Name for your Character: ";
             getline(cin, name);
             if (name.empty()){
@@ -75,33 +73,47 @@ void createCharacter(dnd::character_ledger ledger){
                 cout << "Adding a character named: " << name << endl;
                 dnd::character * new_character = ledger.add_characters();
                 new_character->set_name(name);
-                fstream output(character_ledger_path, ios::out | ios::binary | ios::trunc);
-                if (!ledger.SerializeToOstream(&output)){
-                    cout << "Failed to write to ledger. Check it exists in " << character_ledger_path << endl;
-                }
             }
+        } else {
+            cout << "Recieved invalid response, Exiting Character Creator." << endl;
+        }
+    }
+    return true; //wrote to ledger
+}
+
+void accessCharacterLedger(bool (*ledgerOperation)(dnd::character_ledger&)){
+    char resolved_path[PATH_MAX];
+    realpath("./build/character_ledger", resolved_path);
+    static string full_ledger_path(resolved_path);
+
+    dnd::character_ledger ledger;
+    fstream input(full_ledger_path, ios::in | ios::binary);
+    bool wroteToLedger = false;
+    if (!input){
+        cout << "You have not created a Character ledger, Loading Character Creator to create one." << endl;
+        wroteToLedger = createCharacter(ledger);
+    } else if (!ledger.ParseFromIstream(&input)){
+        throw optionsException("Failed to parse the characters ledger.");
+    } else if (ledger.characters_size() == 0){
+        cout << "There are no characters in the character ledger. Loading Character Creator to create one." << endl;
+        wroteToLedger = createCharacter(ledger);
+    } else {
+        wroteToLedger = ledgerOperation(ledger);
+    }
+
+    if (wroteToLedger){
+        fstream output(full_ledger_path, ios::out | ios::binary | ios::trunc);
+        if (!ledger.SerializeToOstream(&output)){
+            cout << "Failed to write to ledger. Check it exists in " << full_ledger_path << endl;
         }
     }
 }
 
-void accessCharacterLedger(void(*ledgerOperation)(dnd::character_ledger)){
-    dnd::character_ledger ledger;
-    fstream input(character_ledger_path, ios::in | ios::binary);
-    if (!input){
-        cout << "You have not created a Character ledger, Loading Character Creator to create one." << endl;
-        createCharacter(ledger);
-    } else if (!ledger.ParseFromIstream(&input)){
-        throw optionsException("Failed to parse the characters ledger.");
-    } else if (ledger.characters_size() == 0){
-        cout << "There are no characters in the character ledger. Run the create character option to create one." << endl;
-    } else {
-        ledgerOperation(ledger);
-    }
-}
-
 int main(int argc, char * argv[]){
+    // initializing some variables
     Dice *d = new Dice();
 
+    // setting up the options
     po::options_description desc("Options");
     bool adv_flag = false;
     bool dis_flag = false;
@@ -123,6 +135,7 @@ int main(int argc, char * argv[]){
         cout << e.what() << endl;
     }
 
+    // parsing the options
     try {
         if (vm.count("help")){
             cout << desc << endl;
@@ -153,8 +166,6 @@ int main(int argc, char * argv[]){
     } catch (optionsException &e){
         cout << e.what() << endl;
     }
-
-
 
     return 0;
 }   
