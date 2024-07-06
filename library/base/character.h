@@ -3,55 +3,55 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #include "equipment_item.h"
 #include "skill.h"
 
 using namespace std;
 
+enum base_stats {
+    STRENGTH = 0,
+    DEXTERITY = 1,
+    CONSTITUTION = 2,
+    INTELLIGENCE = 3,
+    WISDOM = 4,
+    CHARISMA = 5
+};
+
+enum derived_stats {
+    ACROBATICS = 0,
+    ANIMAL_HANDLING = 1,
+    ARCANA = 2,
+    ATHLETICS = 3,
+    DECEPTION = 4,
+    HISTORY = 5,
+    INSIGHT = 6,
+    INTIMIDATION = 7,
+    INVESTIGATION = 8,
+    MEDICINE = 8,
+    NATURE = 10,
+    PERCEPTION = 11,
+    PERFORMANCE = 12,
+    PERSUASION = 13,
+    RELIGION = 14,
+    STEALTH = 15,
+    SLEIGHT_OF_HAND = 16,
+    SURVIVAL = 17
+};
+
 class Character {
     public:
 
-    Character(int level, int base_stats[6]);
+    Character();
     virtual ~Character(){};
 
-    string getAbilityScoresAndModifiers();
-    
-    string getHitPoints();
-    string takeDamage(int damage);
-    string heal(int health);
-
-    string getDeathSaves();
-    string rollDeathSave();
-
-    string getMoney();
-    void buyItem(int cashInvested, EquipmentItem item);
-    void sellItem(int cashEarned, EquipmentItem item);
-    void addItem(EquipmentItem item);
-    void discardItem(string itemName);
-    void attuneToItem(string name);
-    void equipItem(string name);
-
-
-    // int getPassivePerception();
+    int getSavingThrowMod(base_stats base_stat);
+    int getBaseStatMod(base_stats base_stat);
+    int getDerivedStatMod(derived_stats derived_stat);
 
     private:
 
-    /*
-        look up the modifer 
-        for a base stat
-    */
-    int getModifier(int base_stat);
-
-    // short cut functions for accessing the ability scores
-    int strength();
-    int dexterity();
-    int constitution();
-    int intelligence();
-    int wisdom();
-    int charisma();
-
-    protected:
     /*
         Order of base stats:
         0. strength
@@ -62,6 +62,7 @@ class Character {
         5. charisma
     */
     int base_stats[6];
+    int proficiency_bonus;
 
     int level;
     int death_saves_success;
@@ -98,21 +99,9 @@ class Character {
     string eye_color;
     string skin_color;
     string hair_color;
-    
-    // TODO add Background class 
-    // background class provides proficiencies 
-    // to the character
-    // and determines size
 
-    // TODO add an equipment 
-    // class for equipment items so that 
-    // you can store descriptions and amounts of equipment items
     map<string, EquipmentItem*> equipment;
     vector<string> attunedItems;
-
-    // TODO add race class 
-    // race determines speed
-    // race also has abilities
 
     /*
         Spell slots

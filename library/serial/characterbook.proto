@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package dnd;
+
+message character{
+    // for now KISS and characters are just names
+    // soon add other attributes of characters
+    optional string name = 1;
+}
+
+message character_ledger{
+    repeated character characters = 1;
+}
