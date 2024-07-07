@@ -37,10 +37,6 @@ string applyMod(int roll, int mod){
 }
 
 int main(int argc, char * argv[]){
-    // initializing some variables
-    Dice *d = new Dice();
-    ledger *character_ledger = new ledger();
-
     // setting up the options
     po::options_description desc("Options");
     bool adv_flag = false;
@@ -49,12 +45,12 @@ int main(int argc, char * argv[]){
     desc.add_options() 
         ("help,h", "produce help message")
         ("roll,r", po::value<int>(), "roll a dice with the provided max value")
-        ("advantage,adv", po::bool_switch(&adv_flag), "roll with advantage")
-        ("disadvantage,dis", po::bool_switch(&dis_flag), "roll with disadvantage")
+        ("advantage,A", po::bool_switch(&adv_flag), "roll with advantage")
+        ("disadvantage,D", po::bool_switch(&dis_flag), "roll with disadvantage")
         ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll")
-        ("list_characters,lc", "list names of saved characters.")
-        ("create_character,cc", "start prompt to create a character.")
-        ("character_info,i", po::value<string>(), "get information about a character.");
+        ("list_characters,l", "list names of saved characters.")
+        ("create_character,c", "start prompt to create a character.")
+        ("ability_scores,a", po::value<string>(), "list ability scores of a given character.");
     
     po::variables_map vm;
     try {
@@ -69,6 +65,7 @@ int main(int argc, char * argv[]){
         if (vm.count("help")){
             cout << desc << endl;
         } else if (vm.count("roll")){
+            Dice *d = new Dice();
             if (adv_flag && dis_flag){
                 throw optionsException("cannot use both --adv and --dis options must pick one.");
             }
@@ -87,14 +84,19 @@ int main(int argc, char * argv[]){
                 int roll = d->rolldX(diceMaxVal);
                 cout << ": " << applyMod(roll, mod) << endl;
             }
-        } else if (vm.count("list_characters")){
-            character_ledger->listCharacters();
-        } else if (vm.count("create_character")){
-            character_ledger->createCharacter();
-        } else if (vm.count("character_info")){
-            string name = vm["character_info"].as<string>();
-            character_ledger->getCharacterInfo(name);
-        }
+            delete d;
+        } else if (vm.count("list_characters") || vm.count("create_character") || vm.count("ability_scores")){
+            ledger * character_ledger = new ledger();
+            if (vm.count("list_characters")){
+                character_ledger->listCharacters();
+            } else if (vm.count("create_character")){
+                character_ledger->createCharacter();
+            } else if (vm.count("ability_scores")){
+                string name = vm["ability_scores"].as<string>();
+                character_ledger->getCharacterAbilityScores(name);
+            }
+            delete character_ledger;
+        } 
     } catch (optionsException &e){
         cout << e.what() << endl;
     }
@@ -102,7 +104,6 @@ int main(int argc, char * argv[]){
         cout << e.what() << endl;
     }
 
-    delete character_ledger;
-    delete d;
+   
     return 0;
 }   
