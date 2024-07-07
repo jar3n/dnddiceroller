@@ -49,17 +49,25 @@ build_code(){
     -l protobuf 
 }
 
+clean_code() {
+    if [ -d $DNDBUILD ]; then
+        rm -r $DNDBUILD
+    fi
+}
+
 proto=0
 build=0
-while getopts "bp" arg; do 
+clean=0
+while getopts "bpc" arg; do 
     case "${arg}" in 
         p) 
-            echo "Building Protocol Buffer"
             proto=1
             ;;
-        b) 
-            echo "Building code"
+        b)  
             build=1
+            ;;
+        c)
+            clean=1
             ;;
         *)
             usage
@@ -68,14 +76,33 @@ while getopts "bp" arg; do
 done
 
 if [[ proto -eq 1 ]]; then
+    echo "Building Protocol Buffer"
     build_proto
+    exit
 fi 
 
 if [[ build -eq 1 ]]; then
-    build_code
+    if [[ clean -eq 0 ]]; then
+        echo "Building code"
+        build_code
+    else
+        echo "cleaning and building is pointless pick one."
+        exit
+    fi
 fi
 
-if [[ proto -eq 0 ]] && [[ build -eq 0 ]]; then
+if [[ clean -eq 1 ]]; then
+    if [[ build -eq 0 ]]; then
+        echo "Cleaning build directory"
+        clean_code
+    else 
+        echo "cleaning and building is pointless pick one."
+        exit
+    fi
+fi
+
+if [[ proto -eq 0 ]] && [[ build -eq 0 ]] && [[ clean -eq 0 ]]; then
     echo "Must specify at at least one option othwise compile will not do anything."
+    exit
 fi
 
