@@ -12,8 +12,15 @@ message character{
     // has no spaces
     optional string short_name = 2;
 
-    // add one ability score for testing more later
-    optional int32 strength = 3;
+    // hold the base ability scores of the character
+    // the order is the following:
+    // 0: strength
+    // 1: dexterity
+    // 2: constitution
+    // 3: intelligence
+    // 4: wisdom
+    // 5: charisma
+    repeated int32 ability_scores = 3;
 }
 
 message character_ledger{
