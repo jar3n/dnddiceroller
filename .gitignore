@@ -1,2 +1,3 @@
 build/**
+library/serial/build/**
 .vscode/**
