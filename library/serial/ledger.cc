@@ -1,22 +1,17 @@
 #include "ledger.h"
 
-dnd::character_ledger ledger::accessLedger()
+void ledger::accessLedger()
 {
     _ledger_in_stream = fstream(_full_ledger_path, ios::in | ios::binary);
-    bool wroteToLedger = false;
     if (!_ledger_in_stream){
-        cout << "You have not created a Character ledger, Loading Character Creator to create one." << endl;
-        wroteToLedger = createCharacter();
+        cout << "You have not created a Character ledger." << endl;
     } else if (!_ledger_data.ParseFromIstream(&_ledger_in_stream)){
         throw ledger_exception("Failed to parse the characters ledger.");
     } else if (_ledger_data.characters_size() == 0){
-        cout << "There are no characters in the character ledger. Loading Character Creator to create one." << endl;
-        wroteToLedger = createCharacter();
-    } else {
-        wroteToLedger = ledgerOperation();
-    }
-    _ledger_in_stream.close();
+        cout << "There are no characters in the character ledger." << endl;
+    } 
 
+    _ledger_in_stream.close();
 }
 
 void ledger::createCharacterHelper()
@@ -41,6 +36,8 @@ void ledger::createCharacterHelper()
     dnd::character * new_character = _ledger_data.add_characters();
     new_character->set_name(name);
     new_character->set_strength(strength);
+
+    writeToLedger();
 }
 
 void ledger::writeToLedger()
@@ -59,7 +56,7 @@ ledger::ledger(string ledger_path)
     _full_ledger_path = string(resolved_path);
 }
 
-bool ledger::createCharacter()
+void ledger::createCharacter()
 {
     string name;
     cout << "Welcome to the Character Creator:" << endl;   
@@ -79,11 +76,9 @@ bool ledger::createCharacter()
             break;
         }
     }
-
-    return true; // wrote to ledger 
 }
 
-bool ledger::getCharacterInfo(string name)
+void ledger::getCharacterInfo(string name)
 {
     for(int i = 0; i < _ledger_data.characters_size(); i++){
         dnd::character c = _ledger_data.characters(i);
@@ -92,16 +87,14 @@ bool ledger::getCharacterInfo(string name)
             cout << "\tStrength: " << c.strength() << endl;
         }
     }
-    return false; // does not write to ledger
 }
 
-bool ledger::listCharacters()
+void ledger::listCharacters()
 {
     cout << "Available Characters:" << endl;
     for (int i = 0; i < _ledger_data.characters_size(); i++){
         cout << _ledger_data.characters(i).name() << endl;
     }
-    return false; // does not write to ledger
 }
 
 ledger_exception::ledger_exception(string msg) : _msg(msg)

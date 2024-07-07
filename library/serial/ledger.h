@@ -24,15 +24,15 @@ class ledger {
     dnd::character_ledger _ledger_data;
     fstream _ledger_in_stream;
 
-    dnd::character_ledger accessLedger();
+    void accessLedger();
     void createCharacterHelper();
     void writeToLedger();
 
     public:
     ledger(string ledger_path = "./build/character_ledger");
-    bool createCharacter();
-    bool getCharacterInfo(string name);
-    bool listCharacters();
+    void createCharacter();
+    void getCharacterInfo(string name);
+    void listCharacters();
 };
 
 #endif
