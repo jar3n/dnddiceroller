@@ -36,8 +36,10 @@ void ledger::setAbilityScoreHelper(dnd::character *c){
         cin >> ability_score;
         if(cin.fail()){
             cin.clear();
-            cout << "Received an invalid value for the " << string(ABILITY_NAMES[i]) << " Ability. Aborting current character creation.\n";
-            return;
+            throw ledger_exception("Received a non integer value for the " + string(ABILITY_NAMES[i]) + " Ability. Aborting current character creation.");
+        } else if(ability_score <= 0 || ability_score > 20) {
+            cin.clear();
+            throw ledger_exception("Received a value out of range for the " + string(ABILITY_NAMES[i]) + " Ability. Abilities range between 1 and 20 inclusive. Aborting current character creation.");
         }
         c->add_ability_scores(ability_score);
     }
