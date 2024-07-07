@@ -7,8 +7,13 @@ message character{
     // soon add other attributes of characters
     optional string name = 1;
 
+    // name that is easy to search for
+    // sets to all lower case and 
+    // has no spaces
+    optional string short_name = 2;
+
     // add one ability score for testing more later
-    optional int32 strength = 2;
+    optional int32 strength = 3;
 }
 
 message character_ledger{

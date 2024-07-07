@@ -14,7 +14,7 @@ class ledger_exception : public exception {
 
     public:
         ledger_exception(string msg);
-        const char * what();
+        string what();
 };
 
 class ledger {
@@ -22,14 +22,13 @@ class ledger {
     private:
     string _full_ledger_path;
     dnd::character_ledger _ledger_data;
-    fstream _ledger_in_stream;
+    bool createdCharacterInConstructor = false;
 
-    void accessLedger();
     void createCharacterHelper();
-    void writeToLedger();
 
     public:
     ledger(string ledger_path = "./build/character_ledger");
+    ~ledger();
     void createCharacter();
     void getCharacterInfo(string name);
     void listCharacters();
