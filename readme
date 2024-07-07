@@ -13,13 +13,18 @@ The program needs to do the following: (SIMPLE EDITION)
 
 2. have a way to create a character
     a. set meta information like name, background, height etc.
-    b. set the ability scores 
-    c. set proficiencies
-    d. set class
-    e. set level
-    e. get information about the character
+        - do this next because its easy and has no functional aspects just text
+    b. set the ability scores (COMPLETED)
+    c. set class 
+        - this determines a lot of proficiencies 
+        - as well as other stuff like 
+            - health
+            - spell slots and spell list
+    d. set level
+    e. set race
+    f. get information about the character
         - meta info
-        - ability scores
+        - ability scores (COMPLETED)
         - proficiencies
         - class 
         - level
@@ -27,7 +32,7 @@ The program needs to do the following: (SIMPLE EDITION)
 
 3. have a way to roll dice based on a character
     a. roll a raw ability score 
-    b. roll a skill score
+    b. roll a skill score no proficiency
     c. roll a saving throw
     d. roll with proficiency
     ... 
