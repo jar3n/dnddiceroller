@@ -2,7 +2,7 @@ Design document for dnd dice roller so i don't have to remember all the modifier
 
 The program needs to do the following: (SIMPLE EDITION)
 
-1. have a good interface for rolling dice
+1. have a good interface for rolling dice (COMPLETED)
     a. plan to use the boost argument parser library for that
     b. I have a dice class to use for that. 
     c. there is one command, roll dice 
@@ -10,6 +10,28 @@ The program needs to do the following: (SIMPLE EDITION)
             - generate a random number in the given range
             - roll advantage and disadvantage
             - roll with modifiers
+
+2. have a way to create a character
+    a. set meta information like name, background, height etc.
+    b. set the ability scores 
+    c. set proficiencies
+    d. set class
+    e. set level
+    e. get information about the character
+        - meta info
+        - ability scores
+        - proficiencies
+        - class 
+        - level
+        - ...
+
+3. have a way to roll dice based on a character
+    a. roll a raw ability score 
+    b. roll a skill score
+    c. roll a saving throw
+    d. roll with proficiency
+    ... 
+    
 
 WILL FOLD IN MORE GOALS LATER TO BUILD UP TO CHARACTER BASED DICE ROLLS
 
