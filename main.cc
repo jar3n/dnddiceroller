@@ -50,7 +50,8 @@ int main(int argc, char * argv[]){
         ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll")
         ("list_characters,l", "list names of saved characters.")
         ("create_character,c", "start prompt to create a character.")
-        ("ability_scores,a", po::value<string>(), "list ability scores of a given character.");
+        ("ability_scores,a", po::value<string>(), "list ability scores of a given character.")
+        ("character-bio,b",po::value<string>(), "get a the fluff for a character.");
     
     po::variables_map vm;
     try {
@@ -85,7 +86,10 @@ int main(int argc, char * argv[]){
                 cout << ": " << applyMod(roll, mod) << endl;
             }
             delete d;
-        } else if (vm.count("list_characters") || vm.count("create_character") || vm.count("ability_scores")){
+        } else if (vm.count("list_characters") ||
+                   vm.count("create_character") || 
+                   vm.count("ability_scores") ||
+                   vm.count("character_bio")){
             ledger * character_ledger = new ledger();
             if (vm.count("list_characters")){
                 character_ledger->listCharacters();
@@ -94,6 +98,12 @@ int main(int argc, char * argv[]){
             } else if (vm.count("ability_scores")){
                 string name = vm["ability_scores"].as<string>();
                 character_ledger->getCharacterAbilityScores(name);
+            } else if(vm.count("character_bio")){
+                string name = vm["character_bio"].as<string>();
+                character_ledger->getCharacterPhysicalTraits(name);
+                character_ledger->getCharacterPersonality(name);
+                character_ledger->getAlignment(name);
+                character_ledger->getCharacterBackstory(name);
             }
             delete character_ledger;
         } 

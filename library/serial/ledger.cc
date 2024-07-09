@@ -29,47 +29,113 @@ ledger::~ledger()
     }
 }
 
-void ledger::setAbilityScoreHelper(dnd::character *c){
+void ledger::promptGetLine(string prompt, string error_msg, string &response)
+{
+    cout << prompt;
+    getline(cin, response);
+    if (response.empty()){
+        throw ledger_exception(error_msg);
+    }
+}
+
+void ledger::promptNumber(string prompt, 
+                          int32_t &response,
+                          pair<int32_t,int32_t> range)
+{
+    cout << prompt;
+    cin >> response;
+    if (cin.fail()){
+        cin.clear();
+        throw ledger_exception("Received a non integer value.");
+    } else if (response <= range.first || response > range.second ){
+        throw ledger_exception("Received a value out of range.");
+    }
+}
+
+void ledger::setAbilityScoreHelper(dnd::character *c)
+{
     int ability_score;
     for (size_t i = 0; i < NUM_ABILITY_SCORES; i++){   
-        cout << "Enter the Character's " << string(ABILITY_NAMES[i]) << " Ability(integer): ";
-        cin >> ability_score;
-        if(cin.fail()){
-            cin.clear();
-            throw ledger_exception("Received a non integer value for the " + string(ABILITY_NAMES[i]) + " Ability. Aborting current character creation.");
-        } else if(ability_score <= 0 || ability_score > 20) {
-            cin.clear();
-            throw ledger_exception("Received a value out of range for the " + string(ABILITY_NAMES[i]) + " Ability. Abilities range between 1 and 20 inclusive. Aborting current character creation.");
-        }
+        promptNumber("Enter the Character's " + string(ABILITY_NAMES[i]) + " Ability(integer): ", 
+                     ability_score,
+                     pair<int32_t, int32_t>(0,20));
         c->add_ability_scores(ability_score);
     }
 }
 
-void ledger::createCharacterHelper(){
+void ledger::setCharacterFluffHelper(dnd::character *c)
+{
+    string response;
+    dnd::personality_traits personality = c->personality();
+    promptGetLine("Enter the Character's Personality Trait: ", 
+                  "Character must have a personality trait.", response);
+    personality.set_personality_trait(response);
+    promptGetLine("Enter the Character's Ideal: ", 
+                  "Character must have a ideal.", response);
+    personality.set_ideals(response);
+    promptGetLine("Enter the Character's Bond: ", 
+                  "Character must have a bond.", response);
+    personality.set_bonds(response);
+    promptGetLine("Enter the Character's Flaw: ", 
+                  "Character must have a Flaw.", response);
+    personality.set_flaws(response);
+    promptGetLine("Enter the Character's Alignment: ", 
+                  "Character must have an alignment.", response);
+    personality.set_alignment(response);
+
+    int32_t numResponse;
+    dnd::physical_traits presence = c->presence();
+    promptNumber("Enter the Character's Age in years: ", numResponse, pair<int,int>(1, INT32_MAX));
+    presence.set_age(numResponse);
+    promptNumber("Enter the Character's Height in inches: ", numResponse, pair<int,int>(1, INT32_MAX));
+    presence.set_age(numResponse);    
+    promptNumber("Enter the Character's Weight in lbs: ", numResponse, pair<int,int>(1, INT32_MAX));
+    promptGetLine("Enter the Character's Skin Tone: ", 
+                  "Character must have a skin tone.", response);
+    presence.set_skin_tone(response);
+    promptGetLine("Enter the Character's Hair Color: ", 
+                  "Character must have a hair color.", response);
+    presence.set_hair_color(response);
+    promptGetLine("Enter the Character's Eye Color: ", 
+                  "Character must have a Eye Color.", response);
+    presence.set_eye_color(response);
+
+    promptGetLine("Enther the Character's Backstory: ", 
+                  "Character must have a backstory.", response);
+    c->set_backstory(response);
+}
+
+bool ledger::createCharacterHelper(){
     string name, short_name;
     dnd::character * new_character = _ledger_data.add_characters();
     cout << "Enter the Full Name for your Character: ";
     getline(cin, name);
     if (name.empty()){
         cout << "Character must have a name.\n";
-        return;
+        return false;
     } 
     cout << "Enter a Short Name for your Character with no spaces: ";
     getline(cin, short_name);
     if (short_name.empty()){
         cout << "Character must have a Short Name. Aborting current character creation.\n";
-        return;
+        return false; 
     } else if (short_name.find(" ") != string::npos){
         cout << "The Short Name must have no spaces. Aborting current character creation.\n";
-        return;
+        return false;
     }
-    setAbilityScoreHelper(new_character);
-    cin.ignore(256, '\n'); // at end of
+    try {
+        setAbilityScoreHelper(new_character);
+        cin.ignore(256, '\n'); // need this before getline after cin >> is used
+        setCharacterFluffHelper(new_character);
+    } catch(ledger_exception &e){
+        cout << e.what() << "\n";
+        return false;
+    }
+
     cout << "Adding a character named: " << name << "\n";
     new_character->set_name(name);
     new_character->set_short_name(boost::algorithm::to_lower_copy(short_name));
-
-
+    return true;
 }
 
 void ledger::createCharacter(){
@@ -77,17 +143,21 @@ void ledger::createCharacter(){
         return;
     }
     cout << "Welcome to the Character Creator:\n";   
-    createCharacterHelper();
+    bool createdACharacter = createCharacterHelper();
 
     while (true){
         string resp;
-        cout << "Would you like to add another character? (y or n) ";
+        if (createdACharacter){
+            cout << "Would you like to add another character? (y or n) ";
+        } else {
+            cout << "Would you like to retry? (y or n) ";
+        }
         getline(cin, resp);
         if (resp.compare("n") == 0){
             cout << "Exiting Character Creator." << endl;
             break;
         } else if (resp.compare("y") == 0){
-            createCharacterHelper();
+            createdACharacter = createCharacterHelper();
         } else {
             cout << "Recieved invalid response, Exiting Character Creator." << endl;
             break;
@@ -103,6 +173,45 @@ void ledger::getCharacterAbilityScores(string name){
     for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
         cout << "  " << string(ABILITY_NAMES[i]) << ": " << c.ability_scores(i) << "\n";
     }
+}
+
+void ledger::getCharacterPersonality(string name)
+{
+    dnd::character c;
+    getCharacter(name, c);
+    dnd::personality_traits traits = c.personality();
+    cout << c.name() << "'s Personality, Ideals, Bonds, and Flaws:\n";
+    cout << " Personality Trait: " << traits.personality_trait() << "\n";
+    cout << " Ideal: " << traits.ideals() << "\n";
+    cout << " Bond: " << traits.bonds() << "\n";
+    cout << " Flaw: " << traits.flaws() << "\n";
+}
+
+void ledger::getAlignment(string name){
+    dnd::character c;
+    getCharacter(name, c);
+    cout << c.name() << "'s Alignment is " << c.personality().alignment() << ".\n";
+}
+
+void ledger::getCharacterBackstory(string name){
+    dnd::character c;
+    getCharacter(name, c);
+    cout << c.name() << "'s Backstory:\n";
+    cout << "   " << c.backstory() << "\n";
+}
+
+void ledger::getCharacterPhysicalTraits(string name)
+{
+    dnd::character c;
+    getCharacter(name, c);
+    dnd::physical_traits traits = c.presence();
+    cout << c.name() << "'s Physical Features:\n";
+    cout << " Age: " << traits.age() << "\n";
+    cout << " Height: " << traits.height() << "\n";
+    cout << " Weight: " << traits.weight() << "\n";
+    cout << " Skin Tone: " << traits.skin_tone() << "\n";
+    cout << " Hair Color: " << traits.hair_color() << "\n";
+    cout << " Eye Color: " << traits.eye_color() << "\n";
 }
 
 void ledger::getCharacter(string name, dnd::character &character){

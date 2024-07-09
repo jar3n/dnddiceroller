@@ -5,6 +5,7 @@
 #include <fstream>
 #include "build/characterbook.pb.h"
 #include <exception>
+#include <climits>
 
 using namespace std;
 
@@ -41,9 +42,16 @@ class ledger {
     dnd::character_ledger _ledger_data;
     bool createdCharacterInConstructor = false;
 
+    // real base helpers
+    void promptGetLine(string prompt, string error_msg, string &response);
+    void promptNumber(string prompt, 
+                      int32_t &response,
+                      pair<int32_t,int32_t> range = pair<int32_t,int32_t>(INT32_MIN, INT32_MAX)); 
+
     void setAbilityScoreHelper(dnd::character *c);
-    void createCharacterHelper();
+    bool createCharacterHelper();
     void getCharacter(string name, dnd::character& character);
+    void setCharacterFluffHelper(dnd::character *c);
 
     // helper functions for getting character ability scores
     int32_t strength(string name);
@@ -58,6 +66,10 @@ class ledger {
     ~ledger();
     void createCharacter();
     void getCharacterAbilityScores(string name);
+    void getCharacterPersonality(string name);
+    void getCharacterBackstory(string name);
+    void getCharacterPhysicalTraits(string name);
+    void getAlignment(string name);
     void listCharacters();
 
 };

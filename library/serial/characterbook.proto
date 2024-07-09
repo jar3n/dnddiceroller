@@ -2,6 +2,25 @@ syntax = "proto2";
 
 package dnd;
 
+message physical_traits{
+    // fluff stuff but separate for organization
+    optional int32 age = 1;
+    optional int32 height = 2;
+    optional int32 weight = 3;
+    optional string skin_tone = 4;
+    optional string hair_color = 5;
+    optional string eye_color = 6;
+}
+
+message personality_traits{
+    // text fluff stuff
+    optional string personality_trait = 1;
+    optional string ideals = 2;
+    optional string bonds = 3;
+    optional string flaws = 4;
+    optional string alignment = 5;
+}
+
 message character{
     // for now KISS and characters are just names
     // soon add other attributes of characters
@@ -12,6 +31,13 @@ message character{
     // has no spaces
     optional string short_name = 2;
 
+    // fluff stuff 
+    optional personality_traits personality = 3;
+    optional physical_traits presence = 4;
+
+    // this thing is long so make it its own field
+    optional string backstory = 5;
+
     // hold the base ability scores of the character
     // the order is the following:
     // 0: strength
@@ -20,7 +46,7 @@ message character{
     // 3: intelligence
     // 4: wisdom
     // 5: charisma
-    repeated int32 ability_scores = 3;
+    repeated int32 ability_scores = 6;
 }
 
 message character_ledger{
