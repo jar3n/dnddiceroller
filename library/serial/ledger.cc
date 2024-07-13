@@ -1,8 +1,7 @@
 #include "ledger.h"
 #include <boost/algorithm/string.hpp>
 
-ledger::ledger(string ledger_path)
-{
+ledger::ledger(string ledger_path){
     char resolved_path[PATH_MAX];
     realpath(ledger_path.c_str(), resolved_path);
     _full_ledger_path = string(resolved_path);
@@ -21,39 +20,46 @@ ledger::ledger(string ledger_path)
     } 
 }
 
-ledger::~ledger()
-{
+ledger::~ledger(){
     fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
     if (!_ledger_data.SerializeToOstream(&ledger_out_stream)){
-        cout << "Failed to write to the character ledger. Check it exists in " << _full_ledger_path << endl;
+        cout << "Failed to write to the character ledger. Check it exists in " <<  _full_ledger_path << std::endl;;
     }
 }
 
-void ledger::promptGetLine(string prompt, string error_msg, string &response)
-{
+void ledger::promptGetLine(string prompt, string error_msg, string &response){
     cout << prompt;
     getline(cin, response);
     if (response.empty()){
-        throw ledger_exception(error_msg);
-    }
+        throw create_character_exception(error_msg);
+    } 
 }
 
 void ledger::promptNumber(string prompt, 
                           int32_t &response,
-                          pair<int32_t,int32_t> range)
-{
+                          pair<int32_t,int32_t> range){
     cout << prompt;
     cin >> response;
     if (cin.fail()){
         cin.clear();
-        throw ledger_exception("Received a non integer value.");
+        throw create_character_exception("Received a non integer value.");
     } else if (response <= range.first || response > range.second ){
-        throw ledger_exception("Received a value out of range.");
+        throw create_character_exception("Received a value out of range.");
     }
+    cin.ignore(256, '\n'); // need this before getline after cin >> is used
 }
 
-void ledger::setAbilityScoreHelper(dnd::character *c)
-{
+void ledger::promptStringNoSpaces(string prompt,string error_msg, string &response){
+    cout << prompt;
+    cin >> response;
+    if (cin.fail()){
+        cin.clear();
+        throw create_character_exception(error_msg);
+    }
+    cin.ignore(256, '\n'); // need this before getline after cin >> is used
+}
+
+void ledger::setAbilityScoreHelper(dnd::character *c){
     int ability_score;
     for (size_t i = 0; i < NUM_ABILITY_SCORES; i++){   
         promptNumber("Enter the Character's " + string(ABILITY_NAMES[i]) + " Ability(integer): ", 
@@ -63,8 +69,7 @@ void ledger::setAbilityScoreHelper(dnd::character *c)
     }
 }
 
-void ledger::setCharacterFluffHelper(dnd::character *c)
-{
+void ledger::setCharacterFluffHelper(dnd::character *c){
     string response;
     dnd::personality_traits personality = c->personality();
     promptGetLine("Enter the Character's Personality Trait: ", 
@@ -85,7 +90,7 @@ void ledger::setCharacterFluffHelper(dnd::character *c)
 
     int32_t numResponse;
     dnd::physical_traits presence = c->presence();
-    promptNumber("Enter the Character's Age in years: ", numResponse, pair<int,int>(1, INT32_MAX));
+    promptNumber("Enter the Character's Age in years: ", numResponse, pair<int,int>(0, INT32_MAX));
     presence.set_age(numResponse);
     promptNumber("Enter the Character's Height in inches: ", numResponse, pair<int,int>(1, INT32_MAX));
     presence.set_age(numResponse);    
@@ -108,26 +113,17 @@ void ledger::setCharacterFluffHelper(dnd::character *c)
 bool ledger::createCharacterHelper(){
     string name, short_name;
     dnd::character * new_character = _ledger_data.add_characters();
-    cout << "Enter the Full Name for your Character: ";
-    getline(cin, name);
-    if (name.empty()){
-        cout << "Character must have a name.\n";
-        return false;
-    } 
-    cout << "Enter a Short Name for your Character with no spaces: ";
-    getline(cin, short_name);
-    if (short_name.empty()){
-        cout << "Character must have a Short Name. Aborting current character creation.\n";
-        return false; 
-    } else if (short_name.find(" ") != string::npos){
-        cout << "The Short Name must have no spaces. Aborting current character creation.\n";
-        return false;
-    }
     try {
+        promptGetLine("Enter the Full Name for your Character: ", 
+                      "Character must have a name.", name);
+        promptStringNoSpaces("Enter a Short Name for your Character with no spaces: ", 
+                      "Character must have a Short Name.", short_name);
         setAbilityScoreHelper(new_character);
-        cin.ignore(256, '\n'); // need this before getline after cin >> is used
         setCharacterFluffHelper(new_character);
     } catch(ledger_exception &e){
+        cout << e.what() << "\n";
+        return false;
+    } catch(create_character_exception &e){
         cout << e.what() << "\n";
         return false;
     }
@@ -148,20 +144,18 @@ void ledger::createCharacter(){
     while (true){
         string resp;
         if (createdACharacter){
-            cout << "Would you like to add another character? (y or n) ";
+            promptStringNoSpaces("Would you like to add another character? (y or n) ", 
+                          "Recieved invalid response, Exiting Character Creator.", resp);
         } else {
-            cout << "Would you like to retry? (y or n) ";
+            promptStringNoSpaces("Would you like to retry? (y or n) ",
+                                 "Recieved invalid response, Exiting Character Creator.", resp);
         }
-        getline(cin, resp);
         if (resp.compare("n") == 0){
             cout << "Exiting Character Creator." << endl;
             break;
         } else if (resp.compare("y") == 0){
             createdACharacter = createCharacterHelper();
-        } else {
-            cout << "Recieved invalid response, Exiting Character Creator." << endl;
-            break;
-        }
+        } 
     }
 }
 
@@ -175,8 +169,7 @@ void ledger::getCharacterAbilityScores(string name){
     }
 }
 
-void ledger::getCharacterPersonality(string name)
-{
+void ledger::getCharacterPersonality(string name){
     dnd::character c;
     getCharacter(name, c);
     dnd::personality_traits traits = c.personality();
@@ -200,8 +193,7 @@ void ledger::getCharacterBackstory(string name){
     cout << "   " << c.backstory() << "\n";
 }
 
-void ledger::getCharacterPhysicalTraits(string name)
-{
+void ledger::getCharacterPhysicalTraits(string name){
     dnd::character c;
     getCharacter(name, c);
     dnd::physical_traits traits = c.presence();
@@ -229,43 +221,10 @@ void ledger::getCharacter(string name, dnd::character &character){
     }
 }
 
-int32_t ledger::strength(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    return c.ability_scores(STRENGTH);
-}
-
-int32_t ledger::dexterity(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    return c.ability_scores(DEXTERITY);
-}
-
-int32_t ledger::constitution(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    return c.ability_scores(CONSTITUTION);
-}
-
-int32_t ledger::intelligence(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    return c.ability_scores(INTELLIGENCE);
-}
-
-int32_t ledger::wisdom(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    return c.ability_scores(WISDOM);
-}
-
-int32_t ledger::charisma(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    return c.ability_scores(CHARISMA);
-}
-
 void ledger::listCharacters(){
+    if (_ledger_data.characters_size() == 0){
+        throw ledger_exception("There are no characters in the ledger. Launch the Character Creator to make one.");
+    }
     cout << "Available Characters:" << endl;
     for (int i = 0; i < _ledger_data.characters_size(); i++){
         cout << _ledger_data.characters(i).name() << " (" << _ledger_data.characters(i).short_name() << ")" << endl;
@@ -276,4 +235,10 @@ ledger_exception::ledger_exception(string msg) : _msg(msg){}
 
 string ledger_exception::what(){
     return "Encountered the following issue with the ledger: " + _msg;
+}
+
+create_character_exception::create_character_exception(string msg) : _msg(msg){}
+
+string create_character_exception::what(){
+    return "Received an invalid response: " + _msg;
 }
