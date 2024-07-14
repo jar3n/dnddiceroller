@@ -51,7 +51,6 @@ void ledger::promptNumber(string prompt,
         throw create_character_exception("Received a value out of range.");
     }
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
 }
 
 void ledger::promptStringNoSpaces(string prompt, string error_msg, string &response){
@@ -63,7 +62,6 @@ void ledger::promptStringNoSpaces(string prompt, string error_msg, string &respo
         throw create_character_exception(error_msg);
     }
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-
 }
 
 void ledger::setAbilityScoreHelper(dnd::character *c){
@@ -167,7 +165,6 @@ void ledger::createCharacter(){
 }
 
 void ledger::getCharacterAbilityScores(string name){
-    size_t numAbilityScores = 6;
     dnd::character c;
     getCharacter(name, c);
     cout << c.name() << "'s Ability Scores:\n";
