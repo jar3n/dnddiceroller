@@ -1,5 +1,6 @@
 #include "ledger.h"
 #include <boost/algorithm/string.hpp>
+#include <limits>
 
 ledger::ledger(string ledger_path){
     char resolved_path[PATH_MAX];
@@ -42,14 +43,18 @@ void ledger::promptNumber(string prompt,
     cin >> response;
     if (cin.fail()){
         cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
         throw create_character_exception("Received a non integer value.");
     } else if (response <= range.first || response > range.second ){
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
         throw create_character_exception("Received a value out of range.");
     }
-    cin.ignore(256, '\n'); // need this before getline after cin >> is used
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 }
 
-void ledger::promptStringNoSpaces(string prompt,string error_msg, string &response){
+void ledger::promptStringNoSpaces(string prompt, string error_msg, string &response){
     cout << prompt;
     cin >> response;
     if (cin.fail()){
@@ -224,10 +229,13 @@ void ledger::getCharacter(string name, dnd::character &character){
 void ledger::listCharacters(){
     if (_ledger_data.characters_size() == 0){
         throw ledger_exception("There are no characters in the ledger. Launch the Character Creator to make one.");
-    }
-    cout << "Available Characters:" << endl;
-    for (int i = 0; i < _ledger_data.characters_size(); i++){
-        cout << _ledger_data.characters(i).name() << " (" << _ledger_data.characters(i).short_name() << ")" << endl;
+    } else if (createdCharacterInConstructor){
+        return;
+    } else {
+        cout << "Available Characters:" << endl;
+            for (int i = 0; i < _ledger_data.characters_size(); i++){
+                cout << _ledger_data.characters(i).name() << " (" << _ledger_data.characters(i).short_name() << ")" << endl;
+            }
     }
 }
 
