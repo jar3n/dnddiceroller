@@ -24,7 +24,7 @@ ledger::ledger(string ledger_path){
 ledger::~ledger(){
     fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
     if (!_ledger_data.SerializeToOstream(&ledger_out_stream)){
-        cout << "Failed to write to the character ledger. Check it exists in " <<  _full_ledger_path << std::endl;;
+        cout << "Failed to write to the character ledger. Check it exists in " <<  _full_ledger_path << std::endl;
     }
 }
 
@@ -59,9 +59,11 @@ void ledger::promptStringNoSpaces(string prompt, string error_msg, string &respo
     cin >> response;
     if (cin.fail()){
         cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
         throw create_character_exception(error_msg);
     }
-    cin.ignore(256, '\n'); // need this before getline after cin >> is used
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+
 }
 
 void ledger::setAbilityScoreHelper(dnd::character *c){
