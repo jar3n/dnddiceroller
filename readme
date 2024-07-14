@@ -12,20 +12,22 @@ The program needs to do the following: (SIMPLE EDITION)
             - roll with modifiers
 
 2. have a way to create a character
-    a. set meta information like name, background, height etc.
+    a. set meta information like name, background, height etc. (COMPLETED)
         - do this next because its easy and has no functional aspects just text
     b. set the ability scores (COMPLETED)
-    c. set class 
+    c. set class and level
         - this determines a lot of proficiencies 
         - as well as other stuff like 
             - health
             - spell slots and spell list
-    d. set level
+            - class features
     e. set race
+        - determines speed
+        - has features
     f. get information about the character
-        - meta info
+        - meta info (COMPLETED)
         - ability scores (COMPLETED)
-        - proficiencies
+        - proficiencies 
         - class 
         - level
         - ...
@@ -35,24 +37,19 @@ The program needs to do the following: (SIMPLE EDITION)
     b. roll a skill score no proficiency
     c. roll a saving throw
     d. roll with proficiency
+
+4. have a way to do combat
+    a. attack roll
+    b. damage roll
+    c. apply status effects (iffy)
+    d. 
     ... 
     
 
 WILL FOLD IN MORE GOALS LATER TO BUILD UP TO CHARACTER BASED DICE ROLLS
 
 
-
-
-
-
-THESE ARE LOFTY GOALS RIGHT NOW SO POSTPONED:
-1. Read a file of some determined structure to understand the character
-    - the structure will be json
-        - need to find a json c++ parser 
-            - options
-                - https://github.com/ibireme/yyjson
-                - https://simdjson.org/
-                - boost json library (picked this one)
+REFERENCE MATERIAL:
     - a lot of the information is derived from the base stats 
         - base stats
             - strength
@@ -65,7 +62,7 @@ THESE ARE LOFTY GOALS RIGHT NOW SO POSTPONED:
             - base stat modifiers based on the stat score
                 - greater than 10 means positive modifier for every two point:
                 - 10 means +0 modifier 
-                - lower than 10 is a negative modifier for ever two points:
+                - lower than 10 is a negative modifier for every two points:
                     1 	    −5
                     2–3 	−4
                     4–5 	−3
