@@ -24,7 +24,7 @@ ledger::ledger(string ledger_path){
 ledger::~ledger(){
     fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
     if (!_ledger_data.SerializeToOstream(&ledger_out_stream)){
-        cout << "Failed to write to the character ledger. Check it exists in " <<  _full_ledger_path << std::endl;
+        cout << "Failed to write to the character ledger. Check it exists in " << _full_ledger_path << endl;
     }
 }
 
