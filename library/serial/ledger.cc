@@ -2,33 +2,36 @@
 #include <boost/algorithm/string.hpp>
 #include <limits>
 #include <unistd.h>
+#include <filesystem>
 
 ledger::ledger(){
-    char resolved_path[PATH_MAX];
-    if (getcwd(resolved_path, sizeof(resolved_path)) == NULL){
-        throw ledger_exception("Error locating the install directory, check the permissions on the parent folder.");
-    }
-    _full_ledger_path = string(resolved_path) + "character_ledger";
+    // put the ledger in the same directory as the dice roller executable
+    // this is linux only 
+    // need to add windows and other OS ways later
+    _full_ledger_path = std::filesystem::canonical("/proc/self/exe").parent_path().string() + "/character_ledger";
 
     fstream ledger_in_stream(_full_ledger_path, ios::in | ios::binary);
     if (!ledger_in_stream){
         cout << "There is no ledger. Loading the Character creator to make one.\n";
         createCharacter();
-        createdCharacterInConstructor = true;
+        _createdCharacterInConstructor = true;
     } else if (!_ledger_data.ParseFromIstream(&ledger_in_stream)){
         throw ledger_exception("Failed to parse the characters ledger.");
     } else if (_ledger_data.characters_size() == 0){
         cout << "There are no characters in the character ledger. Loading the Charater creator to make one.\n";
         createCharacter();
-        createdCharacterInConstructor = true;
+        _createdCharacterInConstructor = true;
     } 
 }
 
 ledger::~ledger(){
-    fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
-    if (!_ledger_data.SerializeToOstream(&ledger_out_stream)){
-        cout << "Failed to write to the character ledger. Check it exists in " << _full_ledger_path << endl;
+    if (_haveUpdateToLedger){
+        fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
+        if (!_ledger_data.SerializeToOstream(&ledger_out_stream)){
+            cout << "Failed to write to the character ledger. Check it exists in " << _full_ledger_path << endl;
+        }
     }
+
 }
 
 void ledger::promptGetLine(string prompt, string error_msg, string &response){
@@ -143,7 +146,7 @@ bool ledger::createCharacterHelper(){
 }
 
 void ledger::createCharacter(){
-    if (createdCharacterInConstructor){
+    if(_createdCharacterInConstructor){
         return;
     }
     cout << "Welcome to the Character Creator:\n";   
@@ -164,7 +167,8 @@ void ledger::createCharacter(){
         } else if (resp.compare("y") == 0){
             createdACharacter = createCharacterHelper();
         } 
-    }
+    } 
+    _haveUpdateToLedger = createdACharacter;
 }
 
 void ledger::getCharacterAbilityScores(string name){
@@ -231,7 +235,7 @@ void ledger::getCharacter(string name, dnd::character &character){
 void ledger::listCharacters(){
     if (_ledger_data.characters_size() == 0){
         throw ledger_exception("There are no characters in the ledger. Launch the Character Creator to make one.");
-    } else if (createdCharacterInConstructor){
+    } else if (_createdCharacterInConstructor){
         return;
     } else {
         cout << "Available Characters:" << endl;

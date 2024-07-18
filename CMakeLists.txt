@@ -9,9 +9,10 @@ include_directories(${Boost_INCLUDE_DIR} ${Protobuf_INCLUDE_DIR})
 
 set(BASE ${CMAKE_CURRENT_LIST_DIR}/library/base)
 set(SERIAL ${CMAKE_CURRENT_LIST_DIR}/library/serial)
+set(PROTOS ${CMAKE_CURRENT_LIST_DIR}/library/protos)
 
 # generate the characterbook protobuf cpp files in the cmake build directory
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${SERIAL}/characterbook.proto)
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOS}/characterbook.proto)
 
 set(DICE ${BASE}/dice.cc ${BASE}/dice.h)
 set(LEDGER ${SERIAL}/ledger.cc ${SERIAL}/ledger.h)
