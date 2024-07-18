@@ -51,7 +51,8 @@ class ledger {
     private:
     string _full_ledger_path;
     dnd::character_ledger _ledger_data;
-    bool createdCharacterInConstructor = false;
+    bool _haveUpdateToLedger = false;
+    bool _createdCharacterInConstructor = false;
 
     // real base helpers
     void promptGetLine(string prompt, string error_msg, string &response);
