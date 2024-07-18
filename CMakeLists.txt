@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.5.0)
-project(DND_Dice_Roller VERSION 0.1.0 LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.28.0)
+project(DND_Dice_Roller VERSION 0.0.1 LANGUAGES C CXX)
 
 
 # find the boost and protobuf libraries and include them
