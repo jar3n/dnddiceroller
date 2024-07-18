@@ -132,3 +132,8 @@ REFERENCE MATERIAL:
 2. Generate random numbers (dice rolls)
 3. Apply correct modifiers to dice rolls
 
+
+Build instructions:
+
+At the top of the repo, type cmake --build "path of build directory" 
+
