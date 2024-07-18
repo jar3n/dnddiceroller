@@ -3,7 +3,7 @@
 
 #include <string>
 #include <fstream>
-#include "build/characterbook.pb.h"
+#include "characterbook.pb.h"
 #include <exception>
 #include <climits>
 
@@ -66,7 +66,7 @@ class ledger {
     void setCharacterFluffHelper(dnd::character *c);
 
     public:
-    ledger(string ledger_path = "./build/character_ledger");
+    ledger();
     ~ledger();
     void createCharacter();
     void getCharacterAbilityScores(string name);

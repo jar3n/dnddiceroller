@@ -1,11 +1,14 @@
 #include "ledger.h"
 #include <boost/algorithm/string.hpp>
 #include <limits>
+#include <unistd.h>
 
-ledger::ledger(string ledger_path){
+ledger::ledger(){
     char resolved_path[PATH_MAX];
-    realpath(ledger_path.c_str(), resolved_path);
-    _full_ledger_path = string(resolved_path);
+    if (getcwd(resolved_path, sizeof(resolved_path)) == NULL){
+        throw ledger_exception("Error locating the install directory, check the permissions on the parent folder.");
+    }
+    _full_ledger_path = string(resolved_path) + "character_ledger";
 
     fstream ledger_in_stream(_full_ledger_path, ios::in | ios::binary);
     if (!ledger_in_stream){
