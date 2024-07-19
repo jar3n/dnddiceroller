@@ -26,10 +26,11 @@ class optionsException : public exception{
 
 string applyMod(int roll, int mod){
     stringstream ss;
+    int final_roll = roll + mod;
     if (mod > 0){
-        ss << roll << " + " << mod << " => " << roll + mod;
+        ss << roll << " + " << mod << " => " << final_roll;
     } else if (mod < 0){
-        ss << roll << " - " << mod << " => " << roll - mod;
+        ss << roll << " - " << mod - 2*mod << " => " << final_roll;
     } else {
         ss << roll;
     }
