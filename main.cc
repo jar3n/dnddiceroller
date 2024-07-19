@@ -4,7 +4,7 @@
 #include <fstream>
 #include <boost/program_options.hpp>
 
-#include "library/base/dice.h"
+#include "library/base/include/dice.h"
 #include "library/serial/ledger.h"
 
 namespace po = boost::program_options;
@@ -26,10 +26,11 @@ class optionsException : public exception{
 
 string applyMod(int roll, int mod){
     stringstream ss;
+    int final_roll = roll + mod;
     if (mod > 0){
-        ss << roll << " + " << mod << " => " << roll + mod;
+        ss << roll << " + " << mod << " => " << final_roll;
     } else if (mod < 0){
-        ss << roll << " - " << mod << " => " << roll - mod;
+        ss << roll << " - " << mod - 2*mod << " => " << final_roll;
     } else {
         ss << roll;
     }

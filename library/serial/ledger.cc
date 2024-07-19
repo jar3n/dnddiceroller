@@ -1,14 +1,20 @@
 #include "ledger.h"
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <limits>
 #include <unistd.h>
-#include <filesystem>
+
 
 ledger::ledger(){
     // put the ledger in the same directory as the dice roller executable
     // this is linux only 
     // need to add windows and other OS ways later
-    _full_ledger_path = std::filesystem::canonical("/proc/self/exe").parent_path().string() + "/character_ledger";
+    char executableDir[PATH_MAX];
+    size_t path_length = readlink("/proc/self/exe", executableDir, sizeof(executableDir));
+    string exeDirStr(executableDir, path_length);
+    boost::filesystem::path exe_path(exeDirStr);
+
+    _full_ledger_path = exe_path.parent_path().string() + "/character_ledger";
 
     fstream ledger_in_stream(_full_ledger_path, ios::in | ios::binary);
     if (!ledger_in_stream){
