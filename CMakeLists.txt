@@ -28,6 +28,3 @@ target_link_libraries(dnddice PUBLIC Boost::program_options Boost::filesystem ${
 
 # this is so that the compiler knows to look in the cmake build directory for the protobuf files
 target_include_directories(dnddice PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-
-
-
