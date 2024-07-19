@@ -4,7 +4,7 @@
 #include <fstream>
 #include <boost/program_options.hpp>
 
-#include "library/base/dice.h"
+#include "library/base/include/dice.h"
 #include "library/serial/ledger.h"
 
 namespace po = boost::program_options;

@@ -1,0 +1,4 @@
+add_library(range range.cc)
+target_include_directories(range PUBLIC include)
+add_library(dice dice.cc)
+target_include_directories(dice PUBLIC include)
