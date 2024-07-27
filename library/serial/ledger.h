@@ -37,14 +37,7 @@ class ledger_exception : public exception {
         string what();
 };
 
-class create_character_exception : public exception {
-    private:
-        string _msg;
-    
-    public:
-        create_character_exception(string msg);
-        string what();
-};
+
 
 class ledger {
     // class for accessing the character ledger.
@@ -54,22 +47,12 @@ class ledger {
     bool _haveUpdateToLedger = false;
     bool _createdCharacterInConstructor = false;
 
-    // real base helpers
-    void promptGetLine(string prompt, string error_msg, string &response);
-    void promptNumber(string prompt, 
-                      int32_t &response,
-                      pair<int32_t,int32_t> range = pair<int32_t,int32_t>(INT32_MIN, INT32_MAX)); 
-    void promptStringNoSpaces(string prompt, string error_msg, string &response);
-
-    void setAbilityScoreHelper(dnd::character *c);
-    bool createCharacterHelper();
     void getCharacter(string name, dnd::character& character);
-    void setCharacterFluffHelper(dnd::character *c);
 
     public:
     ledger();
     ~ledger();
-    void createCharacter();
+   
     void getCharacterAbilityScores(string name);
     void getCharacterPersonality(string name);
     void getCharacterBackstory(string name);

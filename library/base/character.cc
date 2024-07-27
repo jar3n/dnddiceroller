@@ -18,12 +18,12 @@ void Character::setPhysicalTraits(physical_traits physical_traits)
     _physical_traits = physical_traits;
 }
 
-personality Character::getPersonalityTraits() const
+personality_traits Character::getPersonalityTraits() const
 {
     return _personality_traits;
 }
 
-void Character::setPersonalityTraits(personality personality_traits){
+void Character::setPersonalityTraits(personality_traits personality_traits){
     _personality_traits = personality_traits;
 }
 
