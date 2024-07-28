@@ -6,6 +6,7 @@
 
 #include "library/base/include/dice.h"
 #include "library/serial/ledger.h"
+#include "library/interface/creator.h"
 
 namespace po = boost::program_options;
 using namespace std;
@@ -52,7 +53,7 @@ int main(int argc, char * argv[]){
         ("list_characters,l", "list names of saved characters.")
         ("create_character,c", "start prompt to create a character.")
         ("ability_scores,a", po::value<string>(), "list ability scores of a given character.")
-        ("character-bio,b",po::value<string>(), "get a the fluff for a character.");
+        ("character_bio,b",po::value<string>(), "get a the fluff for a character.");
     
     po::variables_map vm;
     try {
@@ -95,7 +96,9 @@ int main(int argc, char * argv[]){
             if (vm.count("list_characters")){
                 character_ledger->listCharacters();
             } else if (vm.count("create_character")){
-                character_ledger->createCharacter();
+                CharacterCreator * creator = new CharacterCreator();
+                creator->createCharacter();
+                delete creator;
             } else if (vm.count("ability_scores")){
                 string name = vm["ability_scores"].as<string>();
                 character_ledger->getCharacterAbilityScores(name);

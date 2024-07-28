@@ -1,9 +1,19 @@
 #ifndef _CREATOR_H_
 #define _CREATOR_H_
 
+#include <boost/algorithm/string.hpp>
 #include <vector>
 #include "character.h"
-#include "ledger.h"
+#include "../serial/ledger.h"
+
+#define ABILITY_NAMES ((const char *[]){"Strength", \
+                                        "Dexterity", \
+                                        "Constitution", \
+                                        "Intelligence", \
+                                        "Wisdom", \
+                                        "Charisma"})
+
+#define PROMPT_RETRIES 5
 
 class create_character_exception : public exception {
     private:
@@ -17,10 +27,7 @@ class create_character_exception : public exception {
 class CharacterCreator {
     private:
         // list of characters to be loaded onto the ledger
-        vector<Character> createdCharacters;
-
-        // load characters into ledger
-        void loadLedger();
+        vector<Character> _createdCharacters;
 
         void promptGetLine(string prompt, string error_msg, string &response);
         void promptNumber(string prompt, 
@@ -30,12 +37,11 @@ class CharacterCreator {
 
 
         // creating character helper functions
-        void setCharacterFluffHelper(dnd::character *c);
-        void setAbilityScoreHelper(dnd::character *c);
+        void setCharacterFluffHelper(Character *c);
+        void setAbilityScoreHelper(Character *c);
         bool createCharacterHelper();
-        void createCharacter();
         
-
+        void addCharactersToLedger();
 
     public:
         CharacterCreator();

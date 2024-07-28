@@ -16,15 +16,17 @@ enable_testing()
 add_subdirectory(library)
 
 set(SERIAL ${CMAKE_CURRENT_LIST_DIR}/library/serial)
+set(DNDINTERFACE ${CMAKE_CURRENT_LIST_DIR}/library/interface)
 set(PROTOS ${CMAKE_CURRENT_LIST_DIR}/library/protos)
 
 # generate the characterbook protobuf cpp files in the cmake build directory
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOS}/characterbook.proto)
 
 set(LEDGER ${SERIAL}/ledger.cc ${SERIAL}/ledger.h)
+set(CREATOR ${DNDINTERFACE}/creator.cc ${DNDINTERFACE}/creator.h)
 
-add_executable(dnddice main.cc ${PROTO_SRCS} ${PROTO_HDRS} ${LEDGER})
-target_link_libraries(dnddice PUBLIC Boost::program_options Boost::filesystem ${Protobuf_LIBRARIES} dice range)
+add_executable(dnddice main.cc ${PROTO_SRCS} ${PROTO_HDRS} ${LEDGER} ${CREATOR})
+target_link_libraries(dnddice PUBLIC Boost::program_options Boost::filesystem ${Protobuf_LIBRARIES} dice range character)
 
 # this is so that the compiler knows to look in the cmake build directory for the protobuf files
 target_include_directories(dnddice PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
