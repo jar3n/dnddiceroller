@@ -5,6 +5,24 @@
 #include <string>
 using namespace std;
 
+#define NUM_ABILITY_SCORES 6
+
+#define ABILITY_NAMES ((const char *[]){"Strength", \
+                                        "Dexterity", \
+                                        "Constitution", \
+                                        "Intelligence", \
+                                        "Wisdom", \
+                                        "Charisma"})
+
+enum ability_score {
+    STRENGTH = 0,
+    DEXTERITY = 1,
+    CONSTITUTION = 2,
+    INTELLIGENCE = 3,
+    WISDOM = 4,
+    CHARISMA = 5
+};
+
 struct physical_traits {
     int32_t age;
     int32_t height;
@@ -33,7 +51,7 @@ class Character {
         string _backstory;
 
         // functional information
-        int32_t _ability_scores[6] = {10};
+        int32_t _ability_scores[NUM_ABILITY_SCORES] = {10};
 
     public:
         Character();
@@ -50,6 +68,12 @@ class Character {
 
         string getShortName() const;
         void setShortName(string short_name);
+
+        void setAbilityScore(size_t index, int32_t value);
+        int32_t getAbilityScore(size_t index);
+
+        void setBackstory(string backstory);
+        string getBackstory();
 
 };
 

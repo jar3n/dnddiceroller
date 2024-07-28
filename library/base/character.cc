@@ -46,3 +46,23 @@ void Character::setShortName(string short_name)
 {
     _short_name = short_name;
 }
+
+void Character::setAbilityScore(size_t index, int32_t value)
+{
+    _ability_scores[index] = value;
+}
+
+int32_t Character::getAbilityScore(size_t index)
+{
+    return _ability_scores[index];
+}
+
+void Character::setBackstory(string backstory)
+{
+    _backstory = backstory;
+}
+
+string Character::getBackstory()
+{
+    return _backstory;
+}
