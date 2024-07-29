@@ -19,13 +19,12 @@ ledger::ledger(){
 
     struct stat buffer;
     if (stat(_full_ledger_path.c_str(), &buffer) != 0){
-       fstream ledger_file;
-       ledger_file.open(_full_ledger_path, ios::out);
-       if(!ledger_file){
-            throw ledger_exception("Unable to create the character ledger");
-       }
-       ledger_file.close();
-
+        fstream ledger_file;
+        ledger_file.open(_full_ledger_path, ios::out);
+        if(!ledger_file){
+                throw ledger_exception("Unable to create the character ledger");
+        }
+        ledger_file.close();
     } 
     fstream ledger_in_stream(_full_ledger_path, ios::in | ios::binary);
 
@@ -37,72 +36,6 @@ ledger::ledger(){
 ledger::~ledger(){
 }
 
-
-
-void ledger::getCharacterAbilityScores(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    cout << c.name() << "'s Ability Scores:\n";
-    for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
-        cout << "  " << string(ABILITY_NAMES[i]) << ": " << c.ability_scores(i) << "\n";
-    }
-}
-
-void ledger::getCharacterPersonality(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    dnd::personality_traits traits = c.personality();
-    cout << c.name() << "'s Personality, Ideals, Bonds, and Flaws:\n";
-    cout << " Personality Trait: " << traits.personality_trait() << "\n";
-    cout << " Ideal: " << traits.ideals() << "\n";
-    cout << " Bond: " << traits.bonds() << "\n";
-    cout << " Flaw: " << traits.flaws() << "\n";
-}
-
-void ledger::getAlignment(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    cout << c.name() << "'s Alignment is " << c.personality().alignment() << ".\n";
-}
-
-void ledger::getCharacterBackstory(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    cout << c.name() << "'s Backstory:\n";
-    cout << "   " << c.backstory() << "\n";
-}
-
-void ledger::getCharacterPhysicalTraits(string name){
-    dnd::character c;
-    getCharacter(name, c);
-    dnd::physical_traits traits = c.presence();
-    cout << c.name() << "'s Physical Features:\n";
-    cout << " Age: " << traits.age() << "\n";
-    cout << " Height: " << traits.height() << "\n";
-    cout << " Weight: " << traits.weight() << "\n";
-    cout << " Skin Tone: " << traits.skin_tone() << "\n";
-    cout << " Hair Color: " << traits.hair_color() << "\n";
-    cout << " Eye Color: " << traits.eye_color() << "\n";
-}
-
-void ledger::getCharacter(string name, dnd::character &character){
-    if (_ledger_data.characters_size() == 0){
-        throw ledger_exception("The ledger has no characters. Run the Character Creator to make one.");
-    } 
-    name = boost::algorithm::to_lower_copy(name);
-    bool found_no_character = true;
-    for(int i = 0; i < _ledger_data.characters_size(); i++){
-        if (_ledger_data.characters(i).short_name() == name){
-            character = _ledger_data.characters(i);
-            found_no_character = false;
-            break;
-        }
-    }
-    if (found_no_character){
-        throw ledger_exception("Found no character with the name: " + name +"\n"); 
-    }
-}
-
 void ledger::writeToLedger()
 {
     fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
@@ -111,15 +44,27 @@ void ledger::writeToLedger()
     }
 }
 
-void ledger::listCharacters(){
-    if (_ledger_data.characters_size() == 0){
-        throw ledger_exception("There are no characters in the ledger. Launch the Character Creator to make one.");
-    } else {
-        cout << "Available Characters:" << endl;
-            for (int i = 0; i < _ledger_data.characters_size(); i++){
-                cout << _ledger_data.characters(i).name() << " (" << _ledger_data.characters(i).short_name() << ")" << endl;
-            }
-    }
+void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character, Character character)
+{
+    character.setName(ledger_character.name());
+    character.setShortName(ledger_character.short_name());
+    personality_traits pc;
+    dnd::personality_traits dpc = ledger_character.personality();
+    pc.personality_trait = dpc.personality_trait();
+    pc.ideals = dpc.ideals();
+    pc.bonds = dpc.bonds();
+    pc.flaws = dpc.flaws();
+    pc.alignment = dpc.alignment();
+    character.setPersonalityTraits(pc);
+    physical_traits phc;
+    dnd::physical_traits dphc = ledger_character.presence();
+    phc.age = dphc.age();
+    phc.eye_color = dphc.eye_color();
+    phc.hair_color = dphc.hair_color();
+    phc.height = dphc.height();
+    phc.skin_tone = dphc.skin_tone();
+    phc.weight = dphc.weight();
+    character.setPhysicalTraits(phc);
 }
 
 void ledger::addCharacter(Character c)
@@ -152,6 +97,43 @@ void ledger::addCharacter(Character c)
     }
 
     writeToLedger();
+}
+
+void ledger::getCharacter(string name, Character& character){
+    size(); // check ledger has any characters
+
+    name = boost::algorithm::to_lower_copy(name);
+    bool found_no_character = true;
+    dnd::character ledger_character;
+    for(int i = 0; i < _ledger_data.characters_size(); i++){
+        if (_ledger_data.characters(i).short_name() == name){
+            ledger_character = _ledger_data.characters(i);
+            found_no_character = false;
+            break;
+        }
+    }
+    if (found_no_character){
+        throw ledger_exception("Found no character with the name: " + name +"\n"); 
+    } else {
+        convertLedgerCharactertoCharacter(ledger_character, character);
+    }
+}
+
+void ledger::getCharacter(size_t index, Character &character)
+{
+   size();
+   dnd::character ledger_character = _ledger_data.characters(index);
+   convertLedgerCharactertoCharacter(ledger_character, character);
+}
+
+size_t ledger::size()
+{
+    if (_ledger_data.characters_size() == 0 ||
+       (_ledger_data.characters_size() == 1 && _ledger_data.characters(1).short_name() == "")){
+        throw ledger_exception("The ledger has no characters. Run the Character Creator to make one.");
+    } else {
+        return _ledger_data.characters_size();
+    }
 }
 
 ledger_exception::ledger_exception(string msg) : _msg(msg){}

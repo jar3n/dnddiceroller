@@ -26,23 +26,20 @@ class ledger {
         string _full_ledger_path;
         dnd::character_ledger _ledger_data;
         bool _haveUpdateToLedger = false;
-        bool _createdCharacterInConstructor = false;
-
-        void getCharacter(string name, dnd::character& character);
+        bool _createdLedgerInConstructor = false;
+        
         void writeToLedger();
+        void convertLedgerCharactertoCharacter(dnd::character &ledger_character, 
+                                               Character character);
 
     public:
         ledger();
         ~ledger();
-    
-        void getCharacterAbilityScores(string name);
-        void getCharacterPersonality(string name);
-        void getCharacterBackstory(string name);
-        void getCharacterPhysicalTraits(string name);
-        void getAlignment(string name);
-        void listCharacters();
 
         void addCharacter(Character c);
+        void getCharacter(string name, Character& character);
+        void getCharacter(size_t index, Character& character);
+        size_t size();
 
 };
 

@@ -24,8 +24,9 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTOS}/characterbook.proto)
 
 set(LEDGER ${SERIAL}/ledger.cc ${SERIAL}/ledger.h)
 set(CREATOR ${DNDINTERFACE}/creator.cc ${DNDINTERFACE}/creator.h)
+set(ACCESSOR ${DNDINTERFACE}/accessor.cc ${DNDINTERFACE}/accessor.h)
 
-add_executable(dnddice main.cc ${PROTO_SRCS} ${PROTO_HDRS} ${LEDGER} ${CREATOR})
+add_executable(dnddice main.cc ${PROTO_SRCS} ${PROTO_HDRS} ${LEDGER} ${CREATOR} ${ACCESSOR})
 target_link_libraries(dnddice PUBLIC Boost::program_options Boost::filesystem ${Protobuf_LIBRARIES} dice range character)
 
 # this is so that the compiler knows to look in the cmake build directory for the protobuf files

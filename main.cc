@@ -5,8 +5,8 @@
 #include <boost/program_options.hpp>
 
 #include "library/base/include/dice.h"
-#include "library/serial/ledger.h"
 #include "library/interface/creator.h"
+#include "library/interface/accessor.h"
 
 namespace po = boost::program_options;
 using namespace std;
@@ -92,24 +92,24 @@ int main(int argc, char * argv[]){
                    vm.count("create_character") || 
                    vm.count("ability_scores") ||
                    vm.count("character_bio")){
-            ledger * character_ledger = new ledger();
+            LedgerAccessor * access = new LedgerAccessor();
             if (vm.count("list_characters")){
-                character_ledger->listCharacters();
+                access->listCharacters();
             } else if (vm.count("create_character")){
                 CharacterCreator * creator = new CharacterCreator();
                 creator->createCharacter();
                 delete creator;
             } else if (vm.count("ability_scores")){
                 string name = vm["ability_scores"].as<string>();
-                character_ledger->getCharacterAbilityScores(name);
+                access->getCharacterAbilityScores(name);
             } else if(vm.count("character_bio")){
                 string name = vm["character_bio"].as<string>();
-                character_ledger->getCharacterPhysicalTraits(name);
-                character_ledger->getCharacterPersonality(name);
-                character_ledger->getAlignment(name);
-                character_ledger->getCharacterBackstory(name);
+                access->getCharacterPhysicalTraits(name);
+                access->getCharacterPersonality(name);
+                access->getAlignment(name);
+                access->getCharacterBackstory(name);
             }
-            delete character_ledger;
+            
         } 
     } catch (optionsException &e){
         cout << e.what() << endl;
