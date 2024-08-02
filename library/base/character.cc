@@ -9,6 +9,34 @@ void Character::checkGivenIndex(size_t index, size_t max_array_value, string arr
 
 Character::Character()
 {
+    // for safety provide initial
+    // values for all character object
+    // attributes
+
+    _name = "";
+    _short_name = "";
+    _physical_traits.age = 0;
+    _physical_traits.height = 0;
+    _physical_traits.weight = 0;
+    _physical_traits.eye_color = "";
+    _physical_traits.hair_color = "";
+    _physical_traits.skin_tone = "";
+    _personality_traits.bonds = "";
+    _personality_traits.flaws = "";
+    _personality_traits.ideals = "";
+    _personality_traits.alignment = "";
+    _backstory = "";
+
+    for (size_t i = 0; i < NUM_ABILITY_SCORES; i++){
+        _ability_scores[i] = 0;
+    }
+    
+    for (size_t i = 0; i < NUM_SKILLS; i++){
+        _proficient_skills[i] = false;
+        _expert_skills[i] = false;
+    }
+
+    _level = 1;
 }
 
 Character::~Character()
