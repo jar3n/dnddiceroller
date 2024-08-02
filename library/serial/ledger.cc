@@ -44,10 +44,11 @@ void ledger::writeToLedger()
     }
 }
 
-void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character, Character character)
+void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character, Character &character)
 {
     character.setName(ledger_character.name());
     character.setShortName(ledger_character.short_name());
+
     personality_traits pc;
     dnd::personality_traits dpc = ledger_character.personality();
     pc.personality_trait = dpc.personality_trait();
@@ -56,6 +57,7 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
     pc.flaws = dpc.flaws();
     pc.alignment = dpc.alignment();
     character.setPersonalityTraits(pc);
+
     physical_traits phc;
     dnd::physical_traits dphc = ledger_character.presence();
     phc.age = dphc.age();
@@ -65,6 +67,11 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
     phc.skin_tone = dphc.skin_tone();
     phc.weight = dphc.weight();
     character.setPhysicalTraits(phc);
+
+    for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
+        character.setAbilityScore(i, ledger_character.ability_scores(i));
+    }
+
 }
 
 void ledger::addCharacter(Character c)

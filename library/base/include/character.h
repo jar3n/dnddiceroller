@@ -51,7 +51,7 @@ class Character {
         string _backstory;
 
         // functional information
-        int32_t _ability_scores[NUM_ABILITY_SCORES] = {10};
+        int32_t _ability_scores[NUM_ABILITY_SCORES];
 
     public:
         Character();

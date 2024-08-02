@@ -6,13 +6,6 @@
 #include "character.h"
 #include "../serial/ledger.h"
 
-#define ABILITY_NAMES ((const char *[]){"Strength", \
-                                        "Dexterity", \
-                                        "Constitution", \
-                                        "Intelligence", \
-                                        "Wisdom", \
-                                        "Charisma"})
-
 #define PROMPT_RETRIES 5
 
 class create_character_exception : public exception {

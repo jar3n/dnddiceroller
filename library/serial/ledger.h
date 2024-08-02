@@ -30,7 +30,7 @@ class ledger {
         
         void writeToLedger();
         void convertLedgerCharactertoCharacter(dnd::character &ledger_character, 
-                                               Character character);
+                                               Character &character);
 
     public:
         ledger();
