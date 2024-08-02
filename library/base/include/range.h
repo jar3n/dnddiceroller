@@ -17,6 +17,7 @@ class RangeConverter {
                 int32_t computeMaxDiff();
                 int32_t getMin();
         };
+
         Range r_old;
         Range r_new;
 
@@ -27,6 +28,18 @@ class RangeConverter {
 
         int32_t convertVal(int32_t val);
 
+};
+
+class AltRangeConverter{
+    private:
+        int32_t _central;
+        int32_t _divisor;
+
+    public:
+        AltRangeConverter(int32_t central, int32_t divisor);
+        ~AltRangeConverter();
+
+        int32_t convertVal(int32_t val);
 };
 
 #endif

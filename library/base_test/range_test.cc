@@ -3,7 +3,7 @@
 
 class RangeConverterTest : public testing::Test {
     protected:
-    RangeConverter * abilityRC;
+    AltRangeConverter * abilityRC;
     RangeConverter * proficiencyRC;
     int32_t abilityScoreMin = 1;
     int32_t abilityScoreMax = 20;
@@ -15,10 +15,7 @@ class RangeConverterTest : public testing::Test {
     int32_t bonusMax = 6;
 
     void SetUp(){
-        abilityRC = new RangeConverter(abilityScoreMin, 
-                                                abilityScoreMax, 
-                                                abilityModMin, 
-                                                abilityModMax);
+        abilityRC = new AltRangeConverter(10, 2);
 
         proficiencyRC = new RangeConverter(levelMin, 
                                            levelMax, 
@@ -43,9 +40,26 @@ TEST_F(RangeConverterTest, AbilityModMinCheck) {
 
     ASSERT_EQ(expected, actual);
 }
+
+TEST_F(RangeConverterTest, AbilityModCheck){
+    int32_t input = 10;
+    int32_t expected = 0;
+    int32_t actual = abilityRC->convertVal(input);
+
+    ASSERT_EQ(expected, actual);
+}
+
+TEST_F(RangeConverterTest, AbilitModAdditionlCheck){
+    int32_t input = 16;
+    int32_t expected = 3;
+    int32_t actual = abilityRC->convertVal(input);
+
+    ASSERT_EQ(expected, actual);
+}
+
 TEST_F(RangeConverterTest, AbilityModMaxCheck){
 
-    int32_t input = 20;
+    int32_t input = 30;
     int32_t expected = 10;
     int32_t actual = abilityRC->convertVal(input);
 
