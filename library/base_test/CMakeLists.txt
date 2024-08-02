@@ -14,6 +14,15 @@ target_link_libraries(range_test
     range
 )
 
+add_executable(character_test character_test.cc)
+
+target_link_libraries(character_test
+    GTest::gtest_main
+    range
+    character
+)
+
 
 include(GoogleTest)
 gtest_discover_tests(range_test)
+gtest_discover_tests(character_test)

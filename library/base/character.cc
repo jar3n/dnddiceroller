@@ -84,13 +84,13 @@ void Character::setShortName(string short_name)
 
 void Character::setAbilityScore(size_t index, int32_t value)
 {
-    checkGivenIndex(index, NUM_ABILITY_SCORES - 1, "the ability scores.");
+    checkGivenIndex(index, NUM_ABILITY_SCORES, "the ability scores.");
     _ability_scores[index] = value;
 }
 
 int32_t Character::getAbilityScore(size_t index)
 {
-    checkGivenIndex(index, NUM_ABILITY_SCORES - 1, "the ability scores.");
+    checkGivenIndex(index, NUM_ABILITY_SCORES, "the ability scores.");
     return _ability_scores[index];
 }
 
@@ -116,11 +116,8 @@ int Character::getLevel()
 
 int Character::getProficiencyBonus()
 {
-    RangeConverter *rc = new RangeConverter(MIN_LEVEL, 
-                                            MAX_LEVEL, 
-                                            MIN_PROFICIENCY_BONUS, 
-                                            MAX_PROFICIENCY_BONUS);
-    int bonus = rc->convertVal(_level);
+    AltRangeConverter *rc = new AltRangeConverter(0, 4);
+    int bonus = rc->convertVal(_level) + 1;
     delete rc;
     return bonus;
     
@@ -128,33 +125,30 @@ int Character::getProficiencyBonus()
 
 void Character::setProficiency(size_t index, bool val)
 {
-    checkGivenIndex(index, NUM_SKILLS - 1, "the proficiencies.");
+    checkGivenIndex(index, NUM_SKILLS, "the proficiencies.");
     _proficient_skills[index] = val;
 }
 
 bool Character::isProficient(size_t index){
-    checkGivenIndex(index, NUM_SKILLS - 1, "the proficiencies.");
+    checkGivenIndex(index, NUM_SKILLS, "the proficiencies.");
     return _proficient_skills[index];
 }
 
 void Character::setExpertise(size_t index, bool val)
 {
-    checkGivenIndex(index, NUM_SKILLS - 1, "the expertise.");
+    checkGivenIndex(index, NUM_SKILLS, "the expertise.");
     _expert_skills[index] = val;
 }
 
 bool Character::isExpert(size_t index)
 {
-    checkGivenIndex(index, NUM_SKILLS - 1, "the expertise.");
+    checkGivenIndex(index, NUM_SKILLS, "the expertise.");
     return _expert_skills[index];
 }
 
 int Character::getAbilityMod(size_t index)
 {
-    RangeConverter *rc = new RangeConverter(MIN_ABILITY_SCORE_VAL, 
-                                            MAX_ABILITY_SCORE_VAL, 
-                                            MIN_ABILITY_SCORE_MOD, 
-                                            MAX_ABILITY_SCORE_MOD);
+    AltRangeConverter *rc = new AltRangeConverter(10, 2);
     int mod = rc->convertVal(getAbilityScore(index));
     delete rc;
 
