@@ -44,6 +44,10 @@ int main(int argc, char * argv[]){
     bool adv_flag = false;
     bool dis_flag = false;
 
+    // used to check if no options were specified 
+    // annoying but thats how it is
+    size_t num_options_with_defaults = 3; 
+
     desc.add_options() 
         ("help,h", "produce help message")
         ("roll,r", po::value<int>(), "roll a dice with the provided max value")
@@ -66,6 +70,9 @@ int main(int argc, char * argv[]){
     // parsing the options
     try {
         if (vm.count("help")){
+            cout << desc << endl;
+        } else if (vm.size() == num_options_with_defaults){
+            cout << "You must specify at least one option. See available options below." << endl;
             cout << desc << endl;
         } else if (vm.count("roll")){
             Dice *d = new Dice();

@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+using namespace boost::filesystem;
+
 
 ledger::ledger(){
     // put the ledger in the same directory as the dice roller executable
@@ -13,35 +15,18 @@ ledger::ledger(){
     char executableDir[PATH_MAX];
     size_t path_length = readlink("/proc/self/exe", executableDir, sizeof(executableDir));
     string exeDirStr(executableDir, path_length);
-    boost::filesystem::path exe_path(exeDirStr);
+    path exe_path(exeDirStr);
 
-    _full_ledger_path = exe_path.parent_path().string() + "/character_ledger";
+    _full_ledger_path = exe_path.parent_path().string() + "/ledger/";
 
-    struct stat buffer;
-    if (stat(_full_ledger_path.c_str(), &buffer) != 0){
-        fstream ledger_file;
-        ledger_file.open(_full_ledger_path, ios::out);
-        if(!ledger_file){
-                throw ledger_exception("Unable to create the character ledger");
-        }
-        ledger_file.close();
-    } 
-    fstream ledger_in_stream(_full_ledger_path, ios::in | ios::binary);
+    if ( !exists(path(_full_ledger_path))){
+        create_directories(path(_full_ledger_path));
+    }
 
-    if (!_ledger_data.ParseFromIstream(&ledger_in_stream)){
-        throw ledger_exception("Failed to parse the characters ledger.");
-    } 
+
 }
 
 ledger::~ledger(){
-}
-
-void ledger::writeToLedger()
-{
-    fstream ledger_out_stream(_full_ledger_path, ios::out | ios::binary | ios::trunc);
-    if (!_ledger_data.SerializeToOstream(&ledger_out_stream)){
-        cout << "Failed to write to the character ledger. Check it exists in " << _full_ledger_path << endl;
-    }
 }
 
 void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character, Character &character)
@@ -74,15 +59,50 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
 
 }
 
+string ledger::createCharacterFile(string name){
+
+    string character_file_string = _full_ledger_path + name;
+    
+    struct stat buffer;
+    if (stat(character_file_string.c_str(), &buffer) != 0){
+        // check the file does not exist before creating it
+        fstream ledger_file;
+        ledger_file.open(character_file_string, ios::out);
+        if(!ledger_file){
+            throw ledger_exception("Unable to create the character file.");
+        }
+        ledger_file.close();
+    } else {
+        throw ledger_exception("There is already a character in the ledger with the name: " + name);
+    }
+
+    return character_file_string;
+
+}
+
+string ledger::getCharacterFile(string name)
+{
+    name = boost::algorithm::to_lower_copy(name);
+    string character_file_string = _full_ledger_path + name;
+    
+    struct stat buffer;
+    if (stat(character_file_string.c_str(), &buffer) != 0){
+        // create the character file if it doesn't already exist
+        throw ledger_exception("The character is not in the ledger. run the character creator to add it.");
+    }
+
+    return character_file_string;
+}
+
 void ledger::addCharacter(Character c)
 {
-    dnd::character * lc = _ledger_data.add_characters();
+    dnd::character lc;
 
-    lc->set_name(c.getName());
-    lc->set_short_name(c.getShortName());
-    lc->set_backstory(c.getBackstory());
+    lc.set_name(c.getName());
+    lc.set_short_name(c.getShortName());
+    lc.set_backstory(c.getBackstory());
     
-    dnd::personality_traits * p = lc->mutable_personality();
+    dnd::personality_traits * p = lc.mutable_personality();
     personality_traits pc = c.getPersonalityTraits();
     p->set_personality_trait(pc.personality_trait);
     p->set_ideals(pc.ideals);
@@ -90,7 +110,7 @@ void ledger::addCharacter(Character c)
     p->set_flaws(pc.flaws);
     p->set_alignment(pc.alignment);
 
-    dnd::physical_traits * ph = lc->mutable_presence();
+    dnd::physical_traits * ph = lc.mutable_presence();
     physical_traits phc = c.getPhysicalTraits();
     ph->set_age(phc.age);
     ph->set_eye_color(phc.eye_color);
@@ -100,47 +120,58 @@ void ledger::addCharacter(Character c)
     ph->set_skin_tone(phc.skin_tone);
 
     for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
-        lc->add_ability_scores(c.getAbilityScore(i));
+        lc.add_ability_scores(c.getAbilityScore(i));
     }
 
-    writeToLedger();
+    // write the character to the file
+    fstream ledger_out_stream(createCharacterFile(c.getShortName()), ios::out | ios::binary | ios::trunc);
+    if (!lc.SerializeToOstream(&ledger_out_stream)){
+        throw ledger_exception("Failed to save character.");
+    }
+    ledger_out_stream.close();
+
 }
 
 void ledger::getCharacter(string name, Character& character){
-    size(); // check ledger has any characters
-
     name = boost::algorithm::to_lower_copy(name);
-    bool found_no_character = true;
-    dnd::character ledger_character;
-    for(int i = 0; i < _ledger_data.characters_size(); i++){
-        if (_ledger_data.characters(i).short_name() == name){
-            ledger_character = _ledger_data.characters(i);
-            found_no_character = false;
-            break;
-        }
+    string character_file = getCharacterFile(name);
+
+    dnd::character lc;
+    fstream character_stream(character_file, ios::in | ios::binary);
+    if(!lc.ParseFromIstream(&character_stream)){
+        throw ledger_exception("Unable to parse character file.");
     }
-    if (found_no_character){
-        throw ledger_exception("Found no character with the name: " + name +"\n"); 
-    } else {
-        convertLedgerCharactertoCharacter(ledger_character, character);
-    }
+    character_stream.close();
+
+    convertLedgerCharactertoCharacter(lc, character);
+    
 }
 
-void ledger::getCharacter(size_t index, Character &character)
+vector<Character> ledger::getAllCharacters()
 {
-   size();
-   dnd::character ledger_character = _ledger_data.characters(index);
-   convertLedgerCharactertoCharacter(ledger_character, character);
+    vector<Character> characters;
+    for(directory_iterator i(_full_ledger_path); i != directory_iterator(); i++){
+        dnd::character lc;
+        fstream character_stream(i->path().string(), ios::in | ios::binary);
+        if(!lc.ParseFromIstream(&character_stream)){
+            throw ledger_exception("Unable to parse character file.");
+        }
+        character_stream.close();
+        Character c;
+        convertLedgerCharactertoCharacter(lc, c);
+        characters.push_back(c);
+    }
+
+    return characters;
 }
 
 size_t ledger::size()
 {
-    if (_ledger_data.characters_size() == 0 ||
-       (_ledger_data.characters_size() == 1 && _ledger_data.characters(1).short_name() == "")){
-        throw ledger_exception("The ledger has no characters. Run the Character Creator to make one.");
-    } else {
-        return _ledger_data.characters_size();
+    size_t size = 0;
+    for(directory_iterator i(_full_ledger_path); i != directory_iterator(); i++){
+        ++size;
     }
+    return size;
 }
 
 ledger_exception::ledger_exception(string msg) : _msg(msg){}

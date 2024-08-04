@@ -22,15 +22,23 @@ class ledger_exception : public exception {
 
 class ledger {
     // class for accessing the character ledger.
+    // part of the refactor
+    // now the "ledger" is really a directory that contains 
+    // a file for each character created
+    // each file when read in will be updated if the command 
+    // calls for it. 
+    // for updating, the file will get deleted and a replaced with 
+    // a new file that has the same character object but with 
+    // new information 
     private:
         string _full_ledger_path;
-        dnd::character_ledger _ledger_data;
-        bool _haveUpdateToLedger = false;
-        bool _createdLedgerInConstructor = false;
         
-        void writeToLedger();
+        // void writeToLedger();
         void convertLedgerCharactertoCharacter(dnd::character &ledger_character, 
                                                Character &character);
+
+        string createCharacterFile(string name);
+        string getCharacterFile(string name);
 
     public:
         ledger();
@@ -38,7 +46,7 @@ class ledger {
 
         void addCharacter(Character c);
         void getCharacter(string name, Character& character);
-        void getCharacter(size_t index, Character& character);
+        vector<Character> getAllCharacters();
         size_t size();
 
 };
