@@ -35,8 +35,7 @@ void LedgerAccessor::getAlignment(string name){
 void LedgerAccessor::getCharacterBackstory(string name){
     Character c;
     getCharacter(name, c);
-    cout << c.getName() << "'s Backstory:\n";
-    cout << "   " << c.getBackstory() << "\n";
+    cout << c.getName() << "'s Backstory:\n   " << c.getBackstory() << endl;
 }
 
 void LedgerAccessor::getCharacterPhysicalTraits(string name){
@@ -52,12 +51,14 @@ void LedgerAccessor::getCharacterPhysicalTraits(string name){
     cout << " Eye Color: " << traits.eye_color << "\n";
 }
 
-
 void LedgerAccessor::listCharacters(){
-    for (size_t i = 0; i < _characterLedger->size(); i++){
-        Character c;
-        _characterLedger->getCharacter(i, c);
-        cout << c.getName() << " (" << c.getShortName() << ")" << endl;
+    vector<Character> characters = _characterLedger->getAllCharacters();
+    if (characters.size() == 0){
+        cout << "No characters in the ledger. Create one with the Character creator. \n";
+        return;
+    }
+    for (size_t i = 0; i < characters.size(); i++){
+        cout << characters[i].getName() << " (" << characters[i].getShortName() << ")" << endl;
     }
 }
 

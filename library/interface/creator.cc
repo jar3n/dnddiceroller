@@ -82,6 +82,7 @@ void CharacterCreator::setCharacterFluffHelper(Character *c){
     promptNumber("Enter the Character's Height in inches: ", numResponse, pair<int,int>(1, INT32_MAX));
     presence.height = numResponse;    
     promptNumber("Enter the Character's Weight in lbs: ", numResponse, pair<int,int>(1, INT32_MAX));
+    presence.weight = numResponse;
     promptGetLine("Enter the Character's Skin Tone: ", 
                   "Character must have a skin tone.", response);
     presence.skin_tone = response;
@@ -91,6 +92,7 @@ void CharacterCreator::setCharacterFluffHelper(Character *c){
     promptGetLine("Enter the Character's Eye Color: ", 
                   "Character must have a Eye Color.", response);
     presence.eye_color = response;
+    c->setPhysicalTraits(presence);
 
     promptGetLine("Enther the Character's Backstory: ", 
                   "Character must have a backstory.", response);

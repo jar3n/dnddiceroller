@@ -48,7 +48,3 @@ message character{
     // 5: charisma
     repeated int32 ability_scores = 6;
 }
-
-message character_ledger{
-    repeated character characters = 1;
-}
