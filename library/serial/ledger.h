@@ -45,6 +45,7 @@ class ledger {
         ~ledger();
 
         void addCharacter(Character c);
+        void deleteCharacter(string name);
         void getCharacter(string name, Character& character);
         vector<Character> getAllCharacters();
         size_t size();

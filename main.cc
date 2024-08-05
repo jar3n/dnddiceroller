@@ -57,7 +57,8 @@ int main(int argc, char * argv[]){
         ("list_characters,l", "list names of saved characters.")
         ("create_character,c", "start prompt to create a character.")
         ("ability_scores,a", po::value<string>(), "list ability scores of a given character.")
-        ("character_bio,b",po::value<string>(), "get a the fluff for a character.");
+        ("character_bio,b",po::value<string>(), "get a the fluff for a character.")
+        ("delete_character,d", po::value<string>(), "remove a character from the ledger.");
     
     po::variables_map vm;
     try {
@@ -98,7 +99,8 @@ int main(int argc, char * argv[]){
         } else if (vm.count("list_characters") ||
                    vm.count("create_character") || 
                    vm.count("ability_scores") ||
-                   vm.count("character_bio")){
+                   vm.count("character_bio") ||
+                   vm.count("delete_character")){
             LedgerAccessor * access = new LedgerAccessor();
             if (vm.count("list_characters")){
                 access->listCharacters();
@@ -115,6 +117,9 @@ int main(int argc, char * argv[]){
                 access->getCharacterPersonality(name);
                 access->getAlignment(name);
                 access->getCharacterBackstory(name);
+            } else if(vm.count("delete_character")){
+                string name = vm["delete_character"].as<string>();
+                access->deleteCharacter(name);
             }
             
         } 

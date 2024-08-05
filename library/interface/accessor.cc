@@ -62,6 +62,11 @@ void LedgerAccessor::listCharacters(){
     }
 }
 
+void LedgerAccessor::deleteCharacter(string name)
+{
+    _characterLedger->deleteCharacter(name);
+}
+
 LedgerAccessor::LedgerAccessor()
 {
     _characterLedger = new ledger();
