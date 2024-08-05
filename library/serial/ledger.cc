@@ -165,6 +165,11 @@ vector<Character> ledger::getAllCharacters()
     return characters;
 }
 
+void ledger::deleteCharacter(string name){
+    string character_file = getCharacterFile(name);
+    remove(character_file.c_str());
+}
+
 size_t ledger::size()
 {
     size_t size = 0;
