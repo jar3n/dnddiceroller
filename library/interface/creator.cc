@@ -8,10 +8,16 @@ CharacterCreator::~CharacterCreator()
 {
 }
 
-void CharacterCreator::promptGetLine(string prompt, string error_msg, string &response)
-{
-    cout << prompt;
-    getline(cin, response);
+void CharacterCreator::promptGetLine(string prompt, string error_msg, string &response){
+    uint16_t attempts = 0;
+    do {
+        cout << prompt;
+        getline(cin, response); 
+        if (response.empty()) {
+            cout << "Please provide a response (attempts left " << PROMPT_RETRIES - attempts << ")" << endl;
+        }
+    } while (response.empty() && attempts++ < PROMPT_RETRIES);
+
     if (response.empty()){
         throw create_character_exception(error_msg);
     }
@@ -20,29 +26,43 @@ void CharacterCreator::promptGetLine(string prompt, string error_msg, string &re
 void CharacterCreator::promptNumber(string prompt, 
                           int32_t &response,
                           pair<int32_t,int32_t> range){
-    cout << prompt;
-    cin >> response;
-    if (cin.fail()){
-        cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-        throw create_character_exception("Received a non integer value.");
-    } else if (response <= range.first || response > range.second ){
-        cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-        throw create_character_exception("Received a value out of range.");
-    }
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    uint16_t attempts = 0;
+    do {
+        cout << prompt;
+        cin >> response;
+        if (cin.fail() || 
+            response <= range.first || response > range.second){
+            cin.clear();
+            cout << "Please provide a numerical value within the range (" 
+            << range.first << "-" << range.second << ")" << endl;
+        }
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } while ((cin.fail() || 
+              response <= range.first || 
+              response > range.second) && 
+              attempts++ < PROMPT_RETRIES);
+
+    if (attempts >= PROMPT_RETRIES){
+            throw create_character_exception("Did not receive a valid response. Exiting Character creator.");
+    } 
 }
 
 void CharacterCreator::promptStringNoSpaces(string prompt, string error_msg, string &response){
-    cout << prompt;
-    cin >> response;
-    if (cin.fail()){
-        cin.clear();
+    uint16_t attempts = 0;
+    do {
+        cout << prompt;
+        cin >> response;
+        if (cin.fail()){
+            cin.clear();
+            cout << error_msg << endl;
+        }
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-        throw create_character_exception(error_msg);
+    } while (cin.fail() && attempts++ < PROMPT_RETRIES);
+
+    if (attempts >= PROMPT_RETRIES){
+        throw create_character_exception("Did not receive a valid reponse. Exiting Character creator.");
     }
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+
 }
 
 void CharacterCreator::setAbilityScoreHelper(Character *c){
