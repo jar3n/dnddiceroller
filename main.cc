@@ -117,7 +117,6 @@ int main(int argc, char * argv[]){
                          parsedKeys.end(),
         back_inserter(rollIntersection));
 
-
         if (vm.count("help")){
             cout << desc << endl;
         } else if (vm.size() == num_options_with_defaults){
