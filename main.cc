@@ -38,6 +38,16 @@ string applyMod(int roll, int mod){
     return ss.str();
 }
 
+vector<string> getOptionNames(po::options_description od){
+    vector<string> names;
+    for (std::vector<boost::shared_ptr<boost::program_options::option_description>>::const_iterator 
+        it = od.options().begin(); it != od.options().end(); it++){
+        names.push_back(it->operator->()->canonical_display_name());
+    }
+
+    return names;
+}
+
 int main(int argc, char * argv[]){
     bool adv_flag = false;
     bool dis_flag = false;
@@ -60,7 +70,7 @@ int main(int argc, char * argv[]){
         ("help", "produce help message")
         ("list", "list names of saved characters.")
         ("create", "start prompt to create a character.")
-        ("ability_scores,A", po::value<string>(), "list ability scores of a given character.")
+        ("scores", po::value<string>(), "list ability scores of a given character.")
         ("bio",po::value<string>(), "get a the fluff for a character.")
         ("delete", po::value<string>(), "remove a character from the ledger.");
     
@@ -84,8 +94,30 @@ int main(int argc, char * argv[]){
         cout << e.what() << endl;
     }
 
+    vector<string> parsedKeys;
+    for (po::variables_map::iterator it = vm.begin(); it != vm.end(); it++){
+        parsedKeys.push_back(it->first);
+    }
+
+    vector<string> rollOptionNames = getOptionNames(characterRollOpsDesc);
+    vector<string> infoOptionNames = getOptionNames(infoOpsDesc);
+
     // parsing the options
     try {
+        vector<string> infoIntersection;
+        vector<string> rollIntersection;
+        set_intersection(infoOptionNames.begin(),
+                         infoOptionNames.end(),
+                         parsedKeys.begin(),
+                         parsedKeys.end(),
+                         back_inserter(infoIntersection));
+        set_intersection(rollOptionNames.begin(),
+                         rollOptionNames.end(),
+                         parsedKeys.begin(),
+                         parsedKeys.end(),
+        back_inserter(rollIntersection));
+
+
         if (vm.count("help")){
             cout << desc << endl;
         } else if (vm.size() == num_options_with_defaults){
@@ -112,29 +144,25 @@ int main(int argc, char * argv[]){
                 cout << ": " << applyMod(roll, mod) << endl;
             }
             delete d;
-        } else if (vm.count("list_characters") ||
-                   vm.count("create_character") || 
-                   vm.count("ability_scores") ||
-                   vm.count("character_bio") ||
-                   vm.count("delete_character")){
+        } else if ((!infoIntersection.empty()) || (!rollIntersection.empty())){
             LedgerAccessor * access = new LedgerAccessor();
-            if (vm.count("list_characters")){
+            if (vm.count("list")){
                 access->listCharacters();
-            } else if (vm.count("create_character")){
+            } else if (vm.count("create")){
                 CharacterCreator * creator = new CharacterCreator();
                 creator->createCharacter();
                 delete creator;
-            } else if (vm.count("ability_scores")){
-                string name = vm["ability_scores"].as<string>();
+            } else if (vm.count("scores")){
+                string name = vm["scores"].as<string>();
                 access->getCharacterAbilityScores(name);
-            } else if(vm.count("character_bio")){
-                string name = vm["character_bio"].as<string>();
+            } else if(vm.count("bio")){
+                string name = vm["bio"].as<string>();
                 access->getCharacterPhysicalTraits(name);
                 access->getCharacterPersonality(name);
                 access->getAlignment(name);
                 access->getCharacterBackstory(name);
-            } else if(vm.count("delete_character")){
-                string name = vm["delete_character"].as<string>();
+            } else if(vm.count("delete")){
+                string name = vm["delete"].as<string>();
                 access->deleteCharacter(name);
             }
             
