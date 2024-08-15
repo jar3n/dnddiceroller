@@ -7,6 +7,7 @@
 #include "library/base/include/dice.h"
 #include "library/interface/creator.h"
 #include "library/interface/accessor.h"
+#include "library/interface/roller.h"
 
 namespace po = boost::program_options;
 using namespace std;
@@ -105,17 +106,18 @@ int main(int argc, char * argv[]){
     // parsing the options
     try {
         vector<string> infoIntersection;
-        vector<string> rollIntersection;
         set_intersection(infoOptionNames.begin(),
                          infoOptionNames.end(),
                          parsedKeys.begin(),
                          parsedKeys.end(),
                          back_inserter(infoIntersection));
+        
+        vector<string> rollIntersection;
         set_intersection(rollOptionNames.begin(),
                          rollOptionNames.end(),
                          parsedKeys.begin(),
                          parsedKeys.end(),
-        back_inserter(rollIntersection));
+                         back_inserter(rollIntersection));
 
         if (vm.count("help")){
             cout << desc << endl;
@@ -143,29 +145,58 @@ int main(int argc, char * argv[]){
                 cout << ": " << applyMod(roll, mod) << endl;
             }
             delete d;
-        } else if ((!infoIntersection.empty()) || (!rollIntersection.empty())){
+        }
+        
+        if (!infoIntersection.empty()){
             LedgerAccessor * access = new LedgerAccessor();
             if (vm.count("list")){
                 access->listCharacters();
-            } else if (vm.count("create")){
+            }
+            if (vm.count("create")){
                 CharacterCreator * creator = new CharacterCreator();
                 creator->createCharacter();
                 delete creator;
-            } else if (vm.count("scores")){
+            } 
+            if (vm.count("scores")){
                 string name = vm["scores"].as<string>();
                 access->getCharacterAbilityScores(name);
-            } else if(vm.count("bio")){
+            }
+            if(vm.count("bio")){
                 string name = vm["bio"].as<string>();
                 access->getCharacterPhysicalTraits(name);
                 access->getCharacterPersonality(name);
                 access->getAlignment(name);
                 access->getCharacterBackstory(name);
-            } else if(vm.count("delete")){
+            } 
+            if(vm.count("delete")){
                 string name = vm["delete"].as<string>();
                 access->deleteCharacter(name);
             }
-            
+            delete access;
         } 
+        
+        if(!rollIntersection.empty()){
+            Roller * characterRoller = new Roller();
+            if(vm.count("strength")){
+                characterRoller->rollStrength(vm["strength"].as<string>());
+            }
+            if(vm.count("dexterity")){
+                characterRoller->rollDexterity(vm["dexterity"].as<string>());
+            }
+            if(vm.count("constitution")){
+                characterRoller->rollConstitution(vm["constitution"].as<string>());
+            }
+            if(vm.count("intelligence")){
+                characterRoller->rollIntelligence(vm["intelligence"].as<string>());
+            }
+            if(vm.count("wisdom")){
+                characterRoller->rollWisdom(vm["wisdom"].as<string>());
+            }
+            if(vm.count("charisma")){
+                characterRoller->rollCharisma(vm["charisma"].as<string>());
+            }
+            delete characterRoller;
+        }
     } catch (optionsException &e){
         cout << e.what() << endl;
     }

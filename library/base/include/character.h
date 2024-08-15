@@ -140,6 +140,8 @@ class Character {
         int getAbilityMod(size_t index);
         int getSkillMod(size_t index);
 
+        string getAbilityScoreName(ability_score ab);
+
 };
 
 #endif

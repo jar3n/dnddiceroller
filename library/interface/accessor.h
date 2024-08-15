@@ -8,6 +8,7 @@ class LedgerAccessor {
     private:
         ledger * _characterLedger;
 
+    protected:
         void getCharacter(string name, Character &c);
 
     public:
