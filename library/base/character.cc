@@ -161,3 +161,8 @@ int Character::getSkillMod(size_t index){
     if (isExpert(index)) mod += getProficiencyBonus();
     return mod;
 }
+
+string Character::getAbilityScoreName(ability_score ab)
+{
+    return ABILITY_NAMES[ab];
+}

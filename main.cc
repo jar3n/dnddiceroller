@@ -7,6 +7,7 @@
 #include "library/base/include/dice.h"
 #include "library/interface/creator.h"
 #include "library/interface/accessor.h"
+#include "library/interface/roller.h"
 
 namespace po = boost::program_options;
 using namespace std;
@@ -39,8 +40,6 @@ string applyMod(int roll, int mod){
 }
 
 int main(int argc, char * argv[]){
-    // setting up the options
-    po::options_description desc("Options");
     bool adv_flag = false;
     bool dis_flag = false;
 
@@ -48,18 +47,36 @@ int main(int argc, char * argv[]){
     // annoying but thats how it is
     size_t num_options_with_defaults = 3; 
 
-    desc.add_options() 
-        ("help,h", "produce help message")
+    // setting up the options
+    po::options_description rollOpsDesc("Straight Roll Options");
+    rollOpsDesc.add_options()
         ("roll,r", po::value<int>(), "roll a dice with the provided max value")
         ("advantage,A", po::bool_switch(&adv_flag), "roll with advantage")
         ("disadvantage,D", po::bool_switch(&dis_flag), "roll with disadvantage")
-        ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll")
-        ("list_characters,l", "list names of saved characters.")
-        ("create_character,c", "start prompt to create a character.")
-        ("ability_scores,a", po::value<string>(), "list ability scores of a given character.")
-        ("character_bio,b",po::value<string>(), "get a the fluff for a character.")
-        ("delete_character,d", po::value<string>(), "remove a character from the ledger.");
+        ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll");
+
+
+    po::options_description infoOpsDesc("Informational Options");
+    infoOpsDesc.add_options() 
+        ("help", "produce help message")
+        ("list", "list names of saved characters.")
+        ("create", "start prompt to create a character.")
+        ("scores", po::value<string>(), "list ability scores of a given character.")
+        ("bio",po::value<string>(), "get a the fluff for a character.")
+        ("delete", po::value<string>(), "remove a character from the ledger.");
     
+    po::options_description characterRollOpsDesc("Character Roll Options");
+    characterRollOpsDesc.add_options()
+        ("strength,s", po::value<string>(), "roll with a strength mod")
+        ("dexterity,d", po::value<string>(), "roll with a dexterity mod")
+        ("intelligence,i", po::value<string>(), "roll with an intelligence mod")
+        ("wisdom,w", po::value<string>(), "roll with a wisdom mod")
+        ("charisma,c", po::value<string>(), "roll with a charisma mod")
+        ("constitution,C", po::value<string>(), "roll with a constitution mod");
+    
+    po::options_description desc;
+    desc.add(infoOpsDesc).add(rollOpsDesc).add(characterRollOpsDesc);
+
     po::variables_map vm;
     try {
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -72,10 +89,14 @@ int main(int argc, char * argv[]){
     try {
         if (vm.count("help")){
             cout << desc << endl;
-        } else if (vm.size() == num_options_with_defaults){
+        }
+        
+        if (vm.size() == num_options_with_defaults){
             cout << "You must specify at least one option. See available options below." << endl;
             cout << desc << endl;
-        } else if (vm.count("roll")){
+        } 
+        
+        if (vm.count("roll")){
             Dice *d = new Dice();
             if (adv_flag && dis_flag){
                 throw optionsException("cannot use both --adv and --dis options must pick one.");
@@ -96,33 +117,56 @@ int main(int argc, char * argv[]){
                 cout << ": " << applyMod(roll, mod) << endl;
             }
             delete d;
-        } else if (vm.count("list_characters") ||
-                   vm.count("create_character") || 
-                   vm.count("ability_scores") ||
-                   vm.count("character_bio") ||
-                   vm.count("delete_character")){
-            LedgerAccessor * access = new LedgerAccessor();
-            if (vm.count("list_characters")){
-                access->listCharacters();
-            } else if (vm.count("create_character")){
-                CharacterCreator * creator = new CharacterCreator();
-                creator->createCharacter();
-                delete creator;
-            } else if (vm.count("ability_scores")){
-                string name = vm["ability_scores"].as<string>();
-                access->getCharacterAbilityScores(name);
-            } else if(vm.count("character_bio")){
-                string name = vm["character_bio"].as<string>();
-                access->getCharacterPhysicalTraits(name);
-                access->getCharacterPersonality(name);
-                access->getAlignment(name);
-                access->getCharacterBackstory(name);
-            } else if(vm.count("delete_character")){
-                string name = vm["delete_character"].as<string>();
-                access->deleteCharacter(name);
-            }
-            
+        }
+
+        LedgerAccessor * access = new LedgerAccessor();
+        if (vm.count("list")){
+            access->listCharacters();
+        }
+        if (vm.count("create")){
+            CharacterCreator * creator = new CharacterCreator();
+            creator->createCharacter();
+            delete creator;
         } 
+        if (vm.count("scores")){
+            string name = vm["scores"].as<string>();
+            access->getCharacterAbilityScores(name);
+        }
+        if(vm.count("bio")){
+            string name = vm["bio"].as<string>();
+            access->getCharacterPhysicalTraits(name);
+            access->getCharacterPersonality(name);
+            access->getAlignment(name);
+            access->getCharacterBackstory(name);
+        } 
+        if(vm.count("delete")){
+            string name = vm["delete"].as<string>();
+            access->deleteCharacter(name);
+        }
+        delete access;
+        
+        
+        Roller * characterRoller = new Roller();
+        if(vm.count("strength")){
+            characterRoller->rollStrength(vm["strength"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("dexterity")){
+            characterRoller->rollDexterity(vm["dexterity"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("constitution")){
+            characterRoller->rollConstitution(vm["constitution"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("intelligence")){
+            characterRoller->rollIntelligence(vm["intelligence"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("wisdom")){
+            characterRoller->rollWisdom(vm["wisdom"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("charisma")){
+            characterRoller->rollCharisma(vm["charisma"].as<string>(), adv_flag, dis_flag);
+        }
+        delete characterRoller;
+        
     } catch (optionsException &e){
         cout << e.what() << endl;
     }
