@@ -39,16 +39,6 @@ string applyMod(int roll, int mod){
     return ss.str();
 }
 
-vector<string> getOptionNames(po::options_description od){
-    vector<string> names;
-    for (std::vector<boost::shared_ptr<boost::program_options::option_description>>::const_iterator 
-        it = od.options().begin(); it != od.options().end(); it++){
-        names.push_back(it->operator->()->canonical_display_name());
-    }
-
-    return names;
-}
-
 int main(int argc, char * argv[]){
     bool adv_flag = false;
     bool dis_flag = false;
