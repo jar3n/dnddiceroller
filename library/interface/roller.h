@@ -8,19 +8,18 @@ using namespace std;
 
 class Roller : public LedgerAccessor {
     private:
-        // might put something here later
-        void rollAbilityCheck(ability_score ab, string name);
+        void rollAbilityCheck(ability_score ab, string name, bool advantage, bool disadvantage);
 
     public:
         Roller();
         ~Roller();
 
-        void rollStrength(string name);
-        void rollDexterity(string name);
-        void rollIntelligence(string name);
-        void rollWisdom(string name);
-        void rollCharisma(string name);
-        void rollConstitution(string name);
+        void rollStrength(string, bool, bool);
+        void rollDexterity(string, bool, bool);
+        void rollIntelligence(string, bool, bool);
+        void rollWisdom(string, bool, bool);
+        void rollCharisma(string, bool, bool);
+        void rollConstitution(string, bool, bool);
     
 };
 

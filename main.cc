@@ -62,7 +62,7 @@ int main(int argc, char * argv[]){
     rollOpsDesc.add_options()
         ("roll,r", po::value<int>(), "roll a dice with the provided max value")
         ("advantage,A", po::bool_switch(&adv_flag), "roll with advantage")
-        ("disadvantage,v", po::bool_switch(&dis_flag), "roll with disadvantage")
+        ("disadvantage,D", po::bool_switch(&dis_flag), "roll with disadvantage")
         ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll");
 
 
@@ -95,36 +95,18 @@ int main(int argc, char * argv[]){
         cout << e.what() << endl;
     }
 
-    vector<string> parsedKeys;
-    for (po::variables_map::iterator it = vm.begin(); it != vm.end(); it++){
-        parsedKeys.push_back(it->first);
-    }
-
-    vector<string> rollOptionNames = getOptionNames(characterRollOpsDesc);
-    vector<string> infoOptionNames = getOptionNames(infoOpsDesc);
-
     // parsing the options
     try {
-        vector<string> infoIntersection;
-        set_intersection(infoOptionNames.begin(),
-                         infoOptionNames.end(),
-                         parsedKeys.begin(),
-                         parsedKeys.end(),
-                         back_inserter(infoIntersection));
-        
-        vector<string> rollIntersection;
-        set_intersection(rollOptionNames.begin(),
-                         rollOptionNames.end(),
-                         parsedKeys.begin(),
-                         parsedKeys.end(),
-                         back_inserter(rollIntersection));
-
         if (vm.count("help")){
             cout << desc << endl;
-        } else if (vm.size() == num_options_with_defaults){
+        }
+        
+        if (vm.size() == num_options_with_defaults){
             cout << "You must specify at least one option. See available options below." << endl;
             cout << desc << endl;
-        } else if (vm.count("roll")){
+        } 
+        
+        if (vm.count("roll")){
             Dice *d = new Dice();
             if (adv_flag && dis_flag){
                 throw optionsException("cannot use both --adv and --dis options must pick one.");
@@ -146,57 +128,55 @@ int main(int argc, char * argv[]){
             }
             delete d;
         }
-        
-        if (!infoIntersection.empty()){
-            LedgerAccessor * access = new LedgerAccessor();
-            if (vm.count("list")){
-                access->listCharacters();
-            }
-            if (vm.count("create")){
-                CharacterCreator * creator = new CharacterCreator();
-                creator->createCharacter();
-                delete creator;
-            } 
-            if (vm.count("scores")){
-                string name = vm["scores"].as<string>();
-                access->getCharacterAbilityScores(name);
-            }
-            if(vm.count("bio")){
-                string name = vm["bio"].as<string>();
-                access->getCharacterPhysicalTraits(name);
-                access->getCharacterPersonality(name);
-                access->getAlignment(name);
-                access->getCharacterBackstory(name);
-            } 
-            if(vm.count("delete")){
-                string name = vm["delete"].as<string>();
-                access->deleteCharacter(name);
-            }
-            delete access;
-        } 
-        
-        if(!rollIntersection.empty()){
-            Roller * characterRoller = new Roller();
-            if(vm.count("strength")){
-                characterRoller->rollStrength(vm["strength"].as<string>());
-            }
-            if(vm.count("dexterity")){
-                characterRoller->rollDexterity(vm["dexterity"].as<string>());
-            }
-            if(vm.count("constitution")){
-                characterRoller->rollConstitution(vm["constitution"].as<string>());
-            }
-            if(vm.count("intelligence")){
-                characterRoller->rollIntelligence(vm["intelligence"].as<string>());
-            }
-            if(vm.count("wisdom")){
-                characterRoller->rollWisdom(vm["wisdom"].as<string>());
-            }
-            if(vm.count("charisma")){
-                characterRoller->rollCharisma(vm["charisma"].as<string>());
-            }
-            delete characterRoller;
+
+        LedgerAccessor * access = new LedgerAccessor();
+        if (vm.count("list")){
+            access->listCharacters();
         }
+        if (vm.count("create")){
+            CharacterCreator * creator = new CharacterCreator();
+            creator->createCharacter();
+            delete creator;
+        } 
+        if (vm.count("scores")){
+            string name = vm["scores"].as<string>();
+            access->getCharacterAbilityScores(name);
+        }
+        if(vm.count("bio")){
+            string name = vm["bio"].as<string>();
+            access->getCharacterPhysicalTraits(name);
+            access->getCharacterPersonality(name);
+            access->getAlignment(name);
+            access->getCharacterBackstory(name);
+        } 
+        if(vm.count("delete")){
+            string name = vm["delete"].as<string>();
+            access->deleteCharacter(name);
+        }
+        delete access;
+        
+        
+        Roller * characterRoller = new Roller();
+        if(vm.count("strength")){
+            characterRoller->rollStrength(vm["strength"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("dexterity")){
+            characterRoller->rollDexterity(vm["dexterity"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("constitution")){
+            characterRoller->rollConstitution(vm["constitution"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("intelligence")){
+            characterRoller->rollIntelligence(vm["intelligence"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("wisdom")){
+            characterRoller->rollWisdom(vm["wisdom"].as<string>(), adv_flag, dis_flag);
+        }
+        if(vm.count("charisma")){
+            characterRoller->rollCharisma(vm["charisma"].as<string>(), adv_flag, dis_flag);
+        }
+        delete characterRoller;
+        
     } catch (optionsException &e){
         cout << e.what() << endl;
     }
