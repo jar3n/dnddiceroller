@@ -18,3 +18,12 @@ dice_res Dice::doubleRoll(int cap){
     res.min_roll = min(res.roll_1, res.roll_2);
     return res;
 }
+
+vector<int> Dice::multiRoll(int cap, uint32_t numRolls)
+{
+    vector<int> res(numRolls);
+    for(int i = 0; i < numRolls; i++){
+        res[i] = rolldX(cap);
+    }
+    return res;
+}

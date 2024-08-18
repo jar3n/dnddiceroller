@@ -2,6 +2,7 @@
 #define _DICE_H_
 
 #include <random>
+#include <vector>
 
 using namespace std;
 struct dice_res {
@@ -19,6 +20,7 @@ class Dice {
         ~Dice();
         int rolldX(int cap);
         dice_res doubleRoll(int cap);
+        vector<int> multiRoll(int cap, uint32_t numRolls);
 
     private:
         random_device rd;

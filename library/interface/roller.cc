@@ -1,6 +1,7 @@
 #include "roller.h"
 #include <sstream>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -12,8 +13,7 @@ Roller::~Roller(){}
 
 void Roller::rollAbilityCheck(ability_score ab, string name, bool advantage, bool disadvantage){
     if(advantage && disadvantage){
-        cout << "You cannot have both advantage and disadvantage on a roll." << endl;
-        return;
+        throw optionsException("You cannot have both advantage and disadvantage on a roll.");
     }
 
     Character c;
@@ -58,6 +58,55 @@ void Roller::rollAbilityCheck(ability_score ab, string name, bool advantage, boo
     
     cout << result.str() << endl;
 
+}
+
+void Roller::roll(uint32_t cap, bool disadvantage, bool advantage, uint32_t numRolls, int modifier){
+    if (disadvantage && advantage){
+        throw optionsException("You can't have both advantage and disadvantage at the same time.");
+    } 
+
+    if ((advantage || disadvantage) && numRolls > 1){
+        throw optionsException("You can't have advantage or disadvantage with multiple rolls.");
+    }
+    
+    int finalRoll = modifier;
+    stringstream rolls, result;
+    Dice d;
+    string modSignStr = modifier >= 0 ? "+" : "-";
+    result << "Rolled " << numRolls << "d" << cap << modSignStr << abs(modifier);
+    if (advantage){
+        result << " with advantage: ";
+        dice_res roll = d.doubleRoll(cap);
+        rolls << roll.min_roll << " < " << roll.max_roll << " => " << roll.max_roll;
+        finalRoll += roll.max_roll;
+        result << rolls.str();
+    } else if (disadvantage){
+        result << " with disadvantage: ";
+        dice_res roll = d.doubleRoll(cap);
+        rolls << roll.min_roll << " < " << roll.max_roll << " => " << roll.min_roll;
+        finalRoll += roll.min_roll;
+        result << rolls.str();
+    } else {
+        result << ": ";
+        vector<int> rolls = d.multiRoll(cap, numRolls);
+        for (int i = 0; i < numRolls; i++){
+            result << rolls[i];
+            if (i < numRolls -1) result << " + ";
+            finalRoll += rolls[i];
+        }
+    }
+
+    stringstream modStr;
+    modStr << "";
+    if (modifier < 0){
+        modStr << " - " << abs(modifier);
+    } else if (modifier > 0) {
+        modStr << " + " << modifier;
+    } 
+    result << modStr.str();
+    result << " => " << finalRoll;
+
+    cout << result.str() << endl;
 }
 
 void Roller::rollStrength(string name, bool advantage, bool disadvantage)

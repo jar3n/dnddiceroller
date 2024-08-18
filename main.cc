@@ -12,36 +12,19 @@
 namespace po = boost::program_options;
 using namespace std;
 
-class optionsException : public exception{
-    public:
-        optionsException(string msg) :
-        _msg(msg){}
-
-        string what(){
-            return "options error: " + _msg;
-        }
-
-    private:
-        string _msg;
-
-};
-
-string applyMod(int roll, int mod){
-    stringstream ss;
-    int final_roll = roll + mod;
-    if (mod > 0){
-        ss << roll << " + " << mod << " => " << final_roll;
-    } else if (mod < 0){
-        ss << roll << " - " << mod - 2*mod << " => " << final_roll;
-    } else {
-        ss << roll;
-    }
-    return ss.str();
-}
-
 int main(int argc, char * argv[]){
     bool adv_flag = false;
     bool dis_flag = false;
+
+    vector<string> advAndDisRequiredOpts = {
+        "roll",
+        "strength",
+        "dexterity",
+        "constitution",
+        "intelligence",
+        "wisdom",
+        "charisma"
+    };
 
     // used to check if no options were specified 
     // annoying but thats how it is
@@ -53,7 +36,8 @@ int main(int argc, char * argv[]){
         ("roll,r", po::value<int>(), "roll a dice with the provided max value")
         ("advantage,A", po::bool_switch(&adv_flag), "roll with advantage")
         ("disadvantage,D", po::bool_switch(&dis_flag), "roll with disadvantage")
-        ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll");
+        ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll")
+        ("multiple,M", po::value<int>()->default_value(1), "set number of times to roll");
 
 
     po::options_description infoOpsDesc("Informational Options");
@@ -85,6 +69,14 @@ int main(int argc, char * argv[]){
         cout << e.what() << endl;
     }
 
+    bool advOrDisAllowed = false;
+    for (string opt : advAndDisRequiredOpts){
+        if (vm.count(opt)){
+            advOrDisAllowed = true;
+            break;
+        }
+    }
+
     // parsing the options
     try {
         if (vm.count("help")){
@@ -92,31 +84,17 @@ int main(int argc, char * argv[]){
         }
         
         if (vm.size() == num_options_with_defaults){
-            cout << "You must specify at least one option. See available options below." << endl;
-            cout << desc << endl;
+            throw optionsException("You must specify at least one option. See available options below.");
         } 
-        
-        if (vm.count("roll")){
-            Dice *d = new Dice();
-            if (adv_flag && dis_flag){
-                throw optionsException("cannot use both --adv and --dis options must pick one.");
+
+        if (!advOrDisAllowed){
+            if(adv_flag || dis_flag){
+                throw optionsException("You must specify a roll option with advantage or disadvantage.");
             }
-            int mod = vm.count("modifier") ? vm["modifier"].as<int>() : 0;
-            int diceMaxVal = vm["roll"].as<int>();
-            cout << "Rolled a d" << diceMaxVal;
-            if (adv_flag || dis_flag){
-                dice_res res_roll = d->doubleRoll(diceMaxVal);
-                string rolls = to_string(res_roll.roll_1) + " " + to_string(res_roll.roll_2);
-                if (adv_flag){
-                    cout << " at advantage: " << rolls << " => " << applyMod(res_roll.max_roll, mod) << endl;
-                } else if (dis_flag){
-                    cout << " at disadvantage: " << rolls << " => " << applyMod(res_roll.min_roll, mod) << endl;
-                }
-            } else {
-                int roll = d->rolldX(diceMaxVal);
-                cout << ": " << applyMod(roll, mod) << endl;
-            }
-            delete d;
+        }
+
+        if (vm.count("roll") == 0 && (vm["modifier"].as<int>() != 0 || vm["multiple"].as<int>() != 1)){
+            throw optionsException("You must specify the roll option with a modifier or multiple.");
         }
 
         LedgerAccessor * access = new LedgerAccessor();
@@ -144,9 +122,19 @@ int main(int argc, char * argv[]){
             access->deleteCharacter(name);
         }
         delete access;
-        
-        
+
         Roller * characterRoller = new Roller();
+        if (vm.count("roll")){
+            // this is a straight roll using the 
+            // options provided and not based on saved 
+            // characters
+            characterRoller->roll(vm["roll"].as<int>(),
+                                  dis_flag, 
+                                  adv_flag, 
+                                  vm["multiple"].as<int>(), 
+                                  vm["modifier"].as<int>());
+        }
+        
         if(vm.count("strength")){
             characterRoller->rollStrength(vm["strength"].as<string>(), adv_flag, dis_flag);
         }
@@ -169,9 +157,12 @@ int main(int argc, char * argv[]){
         
     } catch (optionsException &e){
         cout << e.what() << endl;
+        cout << desc << endl;
     }
       catch(ledger_exception &e){
         cout << e.what() << endl;
+    } catch (...){
+        cout << desc << endl;
     }
 
    
