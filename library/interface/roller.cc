@@ -61,7 +61,7 @@ void Roller::rollAbilityCheck(ability_score ab, string name, bool advantage, boo
     string rollStr = rollCheck(c.getAbilityMod(ab), advantage, disadvantage);
 
     stringstream result;
-    result << c.getName() << "'s " << c.getAbilityScoreName(ab) << " check" << rollStr;
+    result << c.getName() << "'s " << getAbilityScoreName(ab) << " check" << rollStr;
 
     cout << result.str() << endl;
 }
@@ -72,7 +72,7 @@ void Roller::rollSkillCheck(skill skill, string name, bool advantage, bool disad
     LedgerAccessor::getCharacter(name, c);
     string rollStr = rollCheck(c.getSkillMod(skill), advantage, disadvantage);
     stringstream result;
-    result << c.getName() << "'s " << c.getSkillName(skill) << " check" << rollStr;
+    result << c.getName() << "'s " << getSkillName(skill) << " check" << rollStr;
     cout << result.str() << endl;
 }
 
@@ -123,124 +123,4 @@ void Roller::roll(uint32_t cap, bool disadvantage, bool advantage, uint32_t numR
     result << " => " << finalRoll;
 
     cout << result.str() << endl;
-}
-
-void Roller::rollStrength(string name, bool advantage, bool disadvantage)
-{
-    rollAbilityCheck(STRENGTH, name, advantage, disadvantage);
-}
-
-void Roller::rollDexterity(string name, bool advantage, bool disadvantage)
-{
-    rollAbilityCheck(DEXTERITY, name, advantage, disadvantage);
-}
-
-void Roller::rollIntelligence(string name, bool advantage, bool disadvantage)
-{
-    rollAbilityCheck(INTELLIGENCE, name, advantage, disadvantage);
-}
-
-void Roller::rollWisdom(string name, bool advantage, bool disadvantage)
-{
-    rollAbilityCheck(WISDOM, name, advantage, disadvantage);
-}
-
-void Roller::rollCharisma(string name, bool advantage, bool disadvantage)
-{
-    rollAbilityCheck(CHARISMA, name, advantage, disadvantage);
-}
-
-void Roller::rollConstitution(string name, bool advantage, bool disadvantage)
-{
-    rollAbilityCheck(CONSTITUTION, name, advantage, disadvantage);
-}
-
-void Roller::rollAcrobatics(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(ACROBATICS, name, advantage, disadvantage);
-}
-
-void Roller::rollAnimalHandling(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(ANIMAL_HANDLING, name, advantage, disadvantage);
-}
-
-void Roller::rollArcana(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(ARCANA, name, advantage, disadvantage);
-}
-
-void Roller::rollAthletics(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(ATHLETICS, name, advantage, disadvantage);
-}
-
-void Roller::rollDeception(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(DECEPTION, name, advantage, disadvantage);
-}
-
-void Roller::rollHistory(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(HISTORY, name, advantage, disadvantage);
-}
-
-void Roller::rollInsight(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(INSIGHT, name, advantage, disadvantage);
-}
-
-void Roller::rollIntimidation(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(INTIMIDATION, name, advantage, disadvantage);
-}
-
-void Roller::rollInvestigation(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(INVESTIGATION, name, advantage, disadvantage);
-}
-
-void Roller::rollMedicine(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(MEDICINE, name, advantage, disadvantage);
-}
-
-void Roller::rollNature(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(NATURE, name, advantage, disadvantage);
-}
-
-void Roller::rollPerception(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(PERCEPTION, name, advantage, disadvantage);
-}
-
-void Roller::rollPerformance(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(PERFORMANCE, name, advantage, disadvantage);
-}
-
-void Roller::rollPersuasion(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(PERSUASION, name, advantage, disadvantage);
-}
-
-void Roller::rollReligion(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(RELIGION, name, advantage, disadvantage);
-}
-
-void Roller::rollSleightOfHand(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(SLEIGHT_OF_HAND, name, advantage, disadvantage);
-}
-
-void Roller::rollStealth(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(STEALTH, name, advantage, disadvantage);
-}
-
-void Roller::rollSurvival(string name, bool advantage, bool disadvantage)
-{
-    rollSkillCheck(SURVIVAL, name, advantage, disadvantage);
 }

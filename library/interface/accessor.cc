@@ -11,7 +11,7 @@ void LedgerAccessor::getCharacterAbilityScores(string name)
     getCharacter(name, c);
     cout << c.getName() << "'s Ability Scores:\n";
     for(ability_score i : ability_score_vector){
-        cout << "  " << string(ABILITY_NAMES[i]) << ": " << c.getAbilityScore(i) << "\n";
+        cout << "  " << getAbilityScoreName(i) << ": " << c.getAbilityScore(i) << "\n";
     }
 }
 
@@ -24,6 +24,16 @@ void LedgerAccessor::getCharacterPersonality(string name){
     cout << " Ideal: " << traits.ideals << "\n";
     cout << " Bond: " << traits.bonds << "\n";
     cout << " Flaw: " << traits.flaws << "\n";
+}
+
+void LedgerAccessor::getCharacterSkills(string name){
+    Character c;
+    getCharacter(name, c);
+    cout << c.getName() << "'s Skills:\n";
+    for(skill i : skill_vector){
+        string modSignStr = c.getSkillMod(i) >= 0 ? " + " : " - ";
+        cout << "  " << getSkillName(i) << ": " << modSignStr << abs(c.getSkillMod(i)) << endl;
+    }
 }
 
 void LedgerAccessor::getAlignment(string name){

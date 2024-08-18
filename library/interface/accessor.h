@@ -13,6 +13,7 @@ class LedgerAccessor {
 
     public:
         void getCharacterAbilityScores(string name);
+        void getCharacterSkills(string name);
         void getCharacterPersonality(string name);
         void getCharacterBackstory(string name);
         void getCharacterPhysicalTraits(string name);

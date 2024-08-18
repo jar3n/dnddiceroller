@@ -197,12 +197,12 @@ int Character::getSkillMod(skill skill){
     return mod;
 }
 
-string Character::getAbilityScoreName(ability_score ab)
+string getAbilityScoreName(ability_score ab)
 {
     return ABILITY_NAMES[ab];
 }
 
-string Character::getSkillName(skill skill)
+string getSkillName(skill skill)
 {
     return SKILL_NAMES[skill];
 }

@@ -57,12 +57,14 @@ enum ability_score {
     CHARISMA = 5
 };
 
-const ability_score ability_score_vector[] = {STRENGTH, 
-                                              DEXTERITY, 
-                                              CONSTITUTION, 
-                                              INTELLIGENCE, 
-                                              WISDOM, 
-                                              CHARISMA};
+const ability_score ability_score_vector[] = {
+    STRENGTH, 
+    DEXTERITY, 
+    CONSTITUTION, 
+    INTELLIGENCE, 
+    WISDOM, 
+    CHARISMA
+};
 
 enum skill {
     ACROBATICS = 0,
@@ -84,6 +86,30 @@ enum skill {
     STEALTH = 16,
     SURVIVAL = 17
 };
+
+const skill skill_vector[] = {
+    ACROBATICS,
+    ANIMAL_HANDLING,
+    ATHLETICS,
+    ARCANA,
+    DECEPTION,
+    HISTORY,
+    INSIGHT,
+    INTIMIDATION,
+    INVESTIGATION,
+    MEDICINE,
+    NATURE,
+    PERCEPTION,
+    PERFORMANCE,
+    PERSUASION,
+    RELIGION,
+    SLEIGHT_OF_HAND,
+    STEALTH,
+    SURVIVAL
+};
+
+string getAbilityScoreName(ability_score ab);
+string getSkillName(skill skill);
 
 struct physical_traits {
     int32_t age;
@@ -167,9 +193,6 @@ class Character {
 
         int getAbilityMod(ability_score ab);
         int getSkillMod(skill skill);
-
-        string getAbilityScoreName(ability_score ab);
-        string getSkillName(skill skill);
 
 };
 
