@@ -8,7 +8,7 @@ TEST(CharacterTest, DefaultConstructor) {
   EXPECT_EQ(character.getLevel(), 1);
   EXPECT_EQ(character.getBackstory(), "");
   for (size_t i = 0; i < NUM_ABILITY_SCORES; i++) {
-    EXPECT_EQ(character.getAbilityScore(i), 0);
+    EXPECT_EQ(character.getAbilityScore((ability_score)(i)), 0);
   }
   for (size_t i = 0; i < NUM_SKILLS; i++) {
     EXPECT_FALSE(character.isProficient(i));
@@ -42,21 +42,21 @@ TEST(CharacterTest, SetGetBackstory) {
 
 TEST(CharacterTest, SetGetAbilityScore) {
   Character character;
-  character.setAbilityScore(0, 16);
-  EXPECT_EQ(character.getAbilityScore(0), 16);
+  character.setAbilityScore((ability_score)(0), 16);
+  EXPECT_EQ(character.getAbilityScore((ability_score)(0)), 16);
 }
 
 TEST(CharacterTest, GetAbilityMod) {
   Character character;
-  character.setAbilityScore(0, 16);
-  EXPECT_EQ(character.getAbilityMod(0), 3);
+  character.setAbilityScore((ability_score)(0), 16);
+  EXPECT_EQ(character.getAbilityMod((ability_score)(0)), 3);
 }
 
 TEST(CharacterTest, GetSkillMod) {
   Character character;
-  character.setAbilityScore(0, 16);
+  character.setAbilityScore((ability_score)(0), 16);
   character.setProficiency(0, true);
-  EXPECT_EQ(character.getSkillMod(0), 5);
+  EXPECT_EQ(character.getSkillMod((skill)(0)), 5);
 }
 
 TEST(CharacterTest, GetProficiencyBonus) {
@@ -91,9 +91,9 @@ TEST(CharacterTest, SetGetExpertise) {
 
 TEST(CharacterTest, CheckGivenIndex) {
   Character character;
-  EXPECT_THROW(character.getAbilityScore(NUM_ABILITY_SCORES), CharacterException);
-  EXPECT_THROW(character.setAbilityScore(NUM_ABILITY_SCORES, 16), CharacterException);
-  EXPECT_THROW(character.getSkillMod(NUM_SKILLS), CharacterException);
+  EXPECT_THROW(character.getAbilityScore((ability_score)(NUM_ABILITY_SCORES)), CharacterException);
+  EXPECT_THROW(character.setAbilityScore((ability_score)(NUM_ABILITY_SCORES), 16), CharacterException);
+  EXPECT_THROW(character.getSkillMod((skill)(NUM_SKILLS)), CharacterException);
   EXPECT_THROW(character.setProficiency(NUM_SKILLS, true), CharacterException);
   EXPECT_THROW(character.setExpertise(NUM_SKILLS, true), CharacterException);
 }

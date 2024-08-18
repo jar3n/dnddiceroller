@@ -10,7 +10,7 @@ void LedgerAccessor::getCharacterAbilityScores(string name)
     Character c;
     getCharacter(name, c);
     cout << c.getName() << "'s Ability Scores:\n";
-    for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
+    for(ability_score i : ability_score_vector){
         cout << "  " << string(ABILITY_NAMES[i]) << ": " << c.getAbilityScore(i) << "\n";
     }
 }

@@ -8,14 +8,35 @@
 
 using namespace std;
 
-
-
 #define ABILITY_NAMES ((const char *[]){"Strength", \
                                         "Dexterity", \
                                         "Constitution", \
                                         "Intelligence", \
                                         "Wisdom", \
                                         "Charisma"})
+
+#define SKILL_NAMES ((const char *[]){\
+    "Acrobatics", \
+    "Animal Handling", \
+    "Arcana", \
+    "Athletics", \
+    "Deception", \
+    "History", \
+    "Insight", \
+    "Intimidation", \
+    "Investigation", \
+    "Medicine", \
+    "Nature", \
+    "Perception", \
+    "Performance", \
+    "Persuasion", \
+    "Religion", \
+    "Sleight of Hand", \
+    "Stealth", \
+    "Survival" \
+})
+
+
 #define MIN_LEVEL 1
 #define MAX_LEVEL 20
 #define MIN_PROFICIENCY_BONUS 2
@@ -35,6 +56,13 @@ enum ability_score {
     WISDOM = 4,
     CHARISMA = 5
 };
+
+const ability_score ability_score_vector[] = {STRENGTH, 
+                                              DEXTERITY, 
+                                              CONSTITUTION, 
+                                              INTELLIGENCE, 
+                                              WISDOM, 
+                                              CHARISMA};
 
 enum skill {
     ACROBATICS = 0,
@@ -120,8 +148,8 @@ class Character {
         string getShortName() const;
         void setShortName(string short_name);
 
-        void setAbilityScore(size_t index, int32_t value);
-        int32_t getAbilityScore(size_t index);
+        void setAbilityScore(ability_score index, int32_t value);
+        int getAbilityScore(ability_score index);
 
         void setBackstory(string backstory);
         string getBackstory();
@@ -137,10 +165,11 @@ class Character {
         void setExpertise(size_t index, bool val);
         bool isExpert(size_t index);
 
-        int getAbilityMod(size_t index);
-        int getSkillMod(size_t index);
+        int getAbilityMod(ability_score ab);
+        int getSkillMod(skill skill);
 
         string getAbilityScoreName(ability_score ab);
+        string getSkillName(skill skill);
 
 };
 

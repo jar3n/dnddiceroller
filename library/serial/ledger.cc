@@ -53,7 +53,7 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
     phc.weight = dphc.weight();
     character.setPhysicalTraits(phc);
 
-    for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
+    for(ability_score i : ability_score_vector){
         character.setAbilityScore(i, ledger_character.ability_scores(i));
     }
 
@@ -119,7 +119,7 @@ void ledger::addCharacter(Character c)
     ph->set_weight(phc.weight);
     ph->set_skin_tone(phc.skin_tone);
 
-    for(size_t i = 0; i < NUM_ABILITY_SCORES; i++){
+    for(ability_score i : ability_score_vector){
         lc.add_ability_scores(c.getAbilityScore(i));
     }
 

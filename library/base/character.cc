@@ -82,13 +82,13 @@ void Character::setShortName(string short_name)
     _short_name = short_name;
 }
 
-void Character::setAbilityScore(size_t index, int32_t value)
+void Character::setAbilityScore(ability_score index, int32_t value)
 {
     checkGivenIndex(index, NUM_ABILITY_SCORES, "the ability scores.");
     _ability_scores[index] = value;
 }
 
-int32_t Character::getAbilityScore(size_t index)
+int Character::getAbilityScore(ability_score index)
 {
     checkGivenIndex(index, NUM_ABILITY_SCORES, "the ability scores.");
     return _ability_scores[index];
@@ -146,23 +146,63 @@ bool Character::isExpert(size_t index)
     return _expert_skills[index];
 }
 
-int Character::getAbilityMod(size_t index)
+int Character::getAbilityMod(ability_score ab)
 {
     AltRangeConverter *rc = new AltRangeConverter(10, 2);
-    int mod = rc->convertVal(getAbilityScore(index));
+    int mod = rc->convertVal(getAbilityScore(ab));
     delete rc;
 
     return mod;
 }
 
-int Character::getSkillMod(size_t index){
-    int mod = getAbilityMod(index);
-    if (isProficient(index)) mod += getProficiencyBonus();
-    if (isExpert(index)) mod += getProficiencyBonus();
+int Character::getSkillMod(skill skill){
+    int mod = 0;
+    
+    switch(skill){
+        case ACROBATICS:
+        case SLEIGHT_OF_HAND:
+        case STEALTH:
+            mod = getAbilityMod(DEXTERITY);
+            break;
+        case ATHLETICS:
+            mod = getAbilityMod(STRENGTH);
+            break;
+        case ANIMAL_HANDLING:
+        case INSIGHT:
+        case MEDICINE:
+        case PERCEPTION:
+        case SURVIVAL:
+            mod = getAbilityMod(WISDOM);
+            break;
+        case ARCANA:
+        case HISTORY:
+        case INVESTIGATION:
+        case NATURE:
+        case RELIGION:
+            mod = getAbilityMod(INTELLIGENCE);
+            break;
+        case DECEPTION:
+        case INTIMIDATION:
+        case PERFORMANCE:
+        case PERSUASION:
+            mod = getAbilityMod(CHARISMA);
+            break;
+        default:
+            throw CharacterException("The provded value has no associated skill.");
+    }
+
+    if (isProficient(skill)) mod += getProficiencyBonus();
+    if (isExpert(skill)) mod += getProficiencyBonus();
+
     return mod;
 }
 
 string Character::getAbilityScoreName(ability_score ab)
 {
     return ABILITY_NAMES[ab];
+}
+
+string Character::getSkillName(skill skill)
+{
+    return SKILL_NAMES[skill];
 }
