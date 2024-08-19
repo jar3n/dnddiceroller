@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <boost/program_options.hpp>
+#include <algorithm>
 
 #include "library/base/include/dice.h"
 #include "library/interface/creator.h"
@@ -28,7 +29,7 @@ int main(int argc, char * argv[]){
 
     // used to check if no options were specified 
     // annoying but thats how it is
-    size_t num_options_with_defaults = 3; 
+    size_t num_options_with_defaults = 4; 
 
     // setting up the options
     po::options_description rollOpsDesc("Straight Roll Options");
@@ -61,7 +62,7 @@ int main(int argc, char * argv[]){
     
     po::options_description skillMods("Skill Mod Rolls");
     skillMods.add_options()
-        ("acrobatics,", po::value<string>(), "roll an acrobatics check")
+        ("acrobatics", po::value<string>(), "roll an acrobatics check")
         ("animal_handling,", po::value<string>(), "roll an animal handling check")
         ("arcana,", po::value<string>(), "roll an arcana check")
         ("athletics,", po::value<string>(), "roll an athletics check")
@@ -167,6 +168,7 @@ int main(int argc, char * argv[]){
 
         for(ability_score ab : ability_score_vector){
             string optionFullName = boost::to_lower_copy(getAbilityScoreName(ab));
+            replace(optionFullName.begin(), optionFullName.end(), ' ', '_');
             if (vm.count(optionFullName)){
                 characterRoller->rollAbilityCheck(ab, vm[optionFullName].as<string>(), adv_flag, dis_flag);
             }
@@ -174,6 +176,7 @@ int main(int argc, char * argv[]){
 
         for(skill s : skill_vector){
             string optionFullName = boost::to_lower_copy(getSkillName(s));
+            replace(optionFullName.begin(), optionFullName.end(), ' ', '_');
             if (vm.count(optionFullName)){
                 characterRoller->rollSkillCheck(s, vm[optionFullName].as<string>(), adv_flag, dis_flag);
             }
