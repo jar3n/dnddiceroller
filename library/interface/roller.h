@@ -20,9 +20,11 @@ class optionsException : public exception{
 
 };
 
+
 class Roller : public LedgerAccessor {
     private:
-        void rollAbilityCheck(ability_score ab, string name, bool advantage, bool disadvantage);
+
+        string rollCheck(int modifier, bool advantage, bool disadvantage);
 
     public:
         Roller();
@@ -30,14 +32,8 @@ class Roller : public LedgerAccessor {
 
         // raw roll taken from main
         void roll(uint32_t cap, bool disadvantage = false, bool advantage = false, uint32_t numRolls = 1, int modifier = 0);
-
-        void rollStrength(string, bool, bool);
-        void rollDexterity(string, bool, bool);
-        void rollIntelligence(string, bool, bool);
-        void rollWisdom(string, bool, bool);
-        void rollCharisma(string, bool, bool);
-        void rollConstitution(string, bool, bool);
-    
+        void rollAbilityCheck(ability_score ab, string name, bool advantage, bool disadvantage);
+        void rollSkillCheck(skill skill, string name, bool advantage, bool disadvantage);
         
 };
 

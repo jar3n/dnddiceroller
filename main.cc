@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <boost/program_options.hpp>
+#include <algorithm>
 
 #include "library/base/include/dice.h"
 #include "library/interface/creator.h"
@@ -28,16 +29,16 @@ int main(int argc, char * argv[]){
 
     // used to check if no options were specified 
     // annoying but thats how it is
-    size_t num_options_with_defaults = 3; 
+    size_t num_options_with_defaults = 4; 
 
     // setting up the options
     po::options_description rollOpsDesc("Straight Roll Options");
     rollOpsDesc.add_options()
-        ("roll,r", po::value<int>(), "roll a dice with the provided max value")
-        ("advantage,A", po::bool_switch(&adv_flag), "roll with advantage")
-        ("disadvantage,D", po::bool_switch(&dis_flag), "roll with disadvantage")
-        ("modifier,m", po::value<int>()->default_value(0), "add a modifier to the roll")
-        ("multiple,M", po::value<int>()->default_value(1), "set number of times to roll");
+        ("roll", po::value<int>(), "roll a dice with the provided max value")
+        ("advantage", po::bool_switch(&adv_flag), "roll with advantage")
+        ("disadvantage", po::bool_switch(&dis_flag), "roll with disadvantage")
+        ("modifier", po::value<int>()->default_value(0), "add a modifier to the roll")
+        ("multiple", po::value<int>()->default_value(1), "set number of times to roll");
 
 
     po::options_description infoOpsDesc("Informational Options");
@@ -46,17 +47,43 @@ int main(int argc, char * argv[]){
         ("list", "list names of saved characters.")
         ("create", "start prompt to create a character.")
         ("scores", po::value<string>(), "list ability scores of a given character.")
+        ("skills", po::value<string>(), "list skill mods of a given character.")
         ("bio",po::value<string>(), "get a the fluff for a character.")
         ("delete", po::value<string>(), "remove a character from the ledger.");
     
+    po::options_description abilityScores("Ability Score Mod Rolls");
+    abilityScores.add_options()
+        ("strength", po::value<string>(), "roll with a strength mod")
+        ("dexterity", po::value<string>(), "roll with a dexterity mod")
+        ("intelligence", po::value<string>(), "roll with an intelligence mod")
+        ("wisdom", po::value<string>(), "roll with a wisdom mod")
+        ("charisma", po::value<string>(), "roll with a charisma mod")
+        ("constitution", po::value<string>(), "roll with a constitution mod");
+    
+    po::options_description skillMods("Skill Mod Rolls");
+    skillMods.add_options()
+        ("acrobatics", po::value<string>(), "roll an acrobatics check")
+        ("animal_handling", po::value<string>(), "roll an animal handling check")
+        ("arcana", po::value<string>(), "roll an arcana check")
+        ("athletics", po::value<string>(), "roll an athletics check")
+        ("deception", po::value<string>(), "roll a deception check")
+        ("history", po::value<string>(), "roll a history check")
+        ("insight", po::value<string>(), "roll an insight check")
+        ("intimidation", po::value<string>(), "roll an intimidation check")
+        ("investigation", po::value<string>(), "roll an investigation check")
+        ("medicine", po::value<string>(), "roll a medicine check")
+        ("nature", po::value<string>(), "roll a nature check")
+        ("perception", po::value<string>(), "roll a perception check")
+        ("performance", po::value<string>(), "roll a performance check")
+        ("persuasion", po::value<string>(), "roll a persuasion check")
+        ("religion", po::value<string>(), "roll a religion check")
+        ("sleight_of_hand", po::value<string>(), "roll a sleight of hand check")
+        ("stealth", po::value<string>(), "roll a stealth check")
+        ("survival", po::value<string>(), "roll a survival check");
+
+    
     po::options_description characterRollOpsDesc("Character Roll Options");
-    characterRollOpsDesc.add_options()
-        ("strength,s", po::value<string>(), "roll with a strength mod")
-        ("dexterity,d", po::value<string>(), "roll with a dexterity mod")
-        ("intelligence,i", po::value<string>(), "roll with an intelligence mod")
-        ("wisdom,w", po::value<string>(), "roll with a wisdom mod")
-        ("charisma,c", po::value<string>(), "roll with a charisma mod")
-        ("constitution,C", po::value<string>(), "roll with a constitution mod");
+    characterRollOpsDesc.add(abilityScores).add(skillMods);
     
     po::options_description desc;
     desc.add(infoOpsDesc).add(rollOpsDesc).add(characterRollOpsDesc);
@@ -110,6 +137,10 @@ int main(int argc, char * argv[]){
             string name = vm["scores"].as<string>();
             access->getCharacterAbilityScores(name);
         }
+        if (vm.count("skills")){
+            string name = vm["skills"].as<string>();
+            access->getCharacterSkills(name);
+        }
         if(vm.count("bio")){
             string name = vm["bio"].as<string>();
             access->getCharacterPhysicalTraits(name);
@@ -134,25 +165,23 @@ int main(int argc, char * argv[]){
                                   vm["multiple"].as<int>(), 
                                   vm["modifier"].as<int>());
         }
-        
-        if(vm.count("strength")){
-            characterRoller->rollStrength(vm["strength"].as<string>(), adv_flag, dis_flag);
+
+        for(ability_score ab : ability_score_vector){
+            string optionFullName = boost::to_lower_copy(getAbilityScoreName(ab));
+            replace(optionFullName.begin(), optionFullName.end(), ' ', '_');
+            if (vm.count(optionFullName)){
+                characterRoller->rollAbilityCheck(ab, vm[optionFullName].as<string>(), adv_flag, dis_flag);
+            }
         }
-        if(vm.count("dexterity")){
-            characterRoller->rollDexterity(vm["dexterity"].as<string>(), adv_flag, dis_flag);
+
+        for(skill s : skill_vector){
+            string optionFullName = boost::to_lower_copy(getSkillName(s));
+            replace(optionFullName.begin(), optionFullName.end(), ' ', '_');
+            if (vm.count(optionFullName)){
+                characterRoller->rollSkillCheck(s, vm[optionFullName].as<string>(), adv_flag, dis_flag);
+            }
         }
-        if(vm.count("constitution")){
-            characterRoller->rollConstitution(vm["constitution"].as<string>(), adv_flag, dis_flag);
-        }
-        if(vm.count("intelligence")){
-            characterRoller->rollIntelligence(vm["intelligence"].as<string>(), adv_flag, dis_flag);
-        }
-        if(vm.count("wisdom")){
-            characterRoller->rollWisdom(vm["wisdom"].as<string>(), adv_flag, dis_flag);
-        }
-        if(vm.count("charisma")){
-            characterRoller->rollCharisma(vm["charisma"].as<string>(), adv_flag, dis_flag);
-        }
+
         delete characterRoller;
         
     } catch (optionsException &e){

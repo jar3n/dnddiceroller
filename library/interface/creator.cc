@@ -66,12 +66,12 @@ void CharacterCreator::promptStringNoSpaces(string prompt, string error_msg, str
 }
 
 void CharacterCreator::setAbilityScoreHelper(Character *c){
-    int ability_score;
-    for (size_t i = 0; i < NUM_ABILITY_SCORES; i++){   
+    int score;
+    for (ability_score i : ability_score_vector){   
         promptNumber("Enter the Character's " + string(ABILITY_NAMES[i]) + " Ability(integer): ", 
-                     ability_score,
+                     score,
                      pair<int32_t, int32_t>(0,20));
-        c->setAbilityScore(i, ability_score);
+        c->setAbilityScore(i, score);
     }
 }
 
