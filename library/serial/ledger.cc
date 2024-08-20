@@ -57,6 +57,8 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
         character.setAbilityScore(i, ledger_character.ability_scores(i));
     }
 
+    character.setBackstory(ledger_character.backstory());
+
 }
 
 string ledger::createCharacterFile(string name){
