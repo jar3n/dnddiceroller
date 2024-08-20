@@ -34,7 +34,7 @@ class Roller : public LedgerAccessor {
         void roll(uint32_t cap, bool disadvantage = false, bool advantage = false, uint32_t numRolls = 1, int modifier = 0);
         void rollAbilityCheck(ability_score ab, string name, bool advantage, bool disadvantage);
         void rollSkillCheck(skill skill, string name, bool advantage, bool disadvantage);
-        
+        void rollInitiative(string name, bool advantage, bool disadvantage);
 };
 
 #endif

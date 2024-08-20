@@ -80,10 +80,14 @@ int main(int argc, char * argv[]){
         ("sleight_of_hand", po::value<string>(), "roll a sleight of hand check")
         ("stealth", po::value<string>(), "roll a stealth check")
         ("survival", po::value<string>(), "roll a survival check");
+    
+    po::options_description combatRolls("Combat Rolls");
+    combatRolls.add_options()
+        ("initiative", po::value<string>(), "roll initiative");
 
     
     po::options_description characterRollOpsDesc("Character Roll Options");
-    characterRollOpsDesc.add(abilityScores).add(skillMods);
+    characterRollOpsDesc.add(abilityScores).add(skillMods).add(combatRolls);
     
     po::options_description desc;
     desc.add(infoOpsDesc).add(rollOpsDesc).add(characterRollOpsDesc);
@@ -180,6 +184,10 @@ int main(int argc, char * argv[]){
             if (vm.count(optionFullName)){
                 characterRoller->rollSkillCheck(s, vm[optionFullName].as<string>(), adv_flag, dis_flag);
             }
+        }
+
+        if (vm.count("initiative")){
+            characterRoller->rollInitiative(vm["initiative"].as<string>(), adv_flag, dis_flag);
         }
 
         delete characterRoller;
