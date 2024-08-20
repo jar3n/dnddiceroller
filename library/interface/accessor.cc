@@ -45,7 +45,7 @@ void LedgerAccessor::getAlignment(string name){
 void LedgerAccessor::getCharacterBackstory(string name){
     Character c;
     getCharacter(name, c);
-    cout << c.getName() << "'s Backstory:\n   " << c.getBackstory() << endl;
+    cout << c.getName() << "'s Backstory:\n  " << c.getBackstory() << endl;
 }
 
 void LedgerAccessor::getCharacterPhysicalTraits(string name){
