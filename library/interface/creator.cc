@@ -40,7 +40,7 @@ void CharacterCreator::promptGetYesNo(string prompt, bool &response)
             response = false;
             break;
         } else {
-            cout << "Invalid input. Please enter 'yes' or 'no' (attempts left" << PROMPT_RETRIES - attempts << ")" << endl;
+            cout << "Invalid input. Please enter 'yes' or 'no' (attempts left " << PROMPT_RETRIES - attempts << ")" << endl;
             }
         } while (input.empty() || (input != "yes" && input != "y" && input != "no" && input != "n") && attempts++ < PROMPT_RETRIES);
         
