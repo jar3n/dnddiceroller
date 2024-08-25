@@ -11,7 +11,11 @@ void LedgerAccessor::getCharacterAbilityScores(string name)
     getCharacter(name, c);
     cout << c.getName() << "'s Ability Scores:\n";
     for(ability_score i : ability_score_vector){
-        cout << "  " << getAbilityScoreName(i) << ": " << c.getAbilityScore(i) << "\n";
+        string modSignStr = c.getAbilityMod(i) >= 0 ? " + " : " - ";
+        string modSaveSignStr = c.getSaveMod(i) >= 0 ? " + " : + " - ";
+        cout << "  " << getAbilityScoreName(i) << ": " << c.getAbilityScore(i);
+        cout << " (mod: " << modSignStr << abs(c.getAbilityMod(i)) << ", save mod: ";
+        cout << modSaveSignStr << abs(c.getSaveMod(i)) << ")" << "\n";
     }
 }
 
@@ -32,7 +36,8 @@ void LedgerAccessor::getCharacterSkills(string name){
     cout << c.getName() << "'s Skills:\n";
     for(skill i : skill_vector){
         string modSignStr = c.getSkillMod(i) >= 0 ? " + " : " - ";
-        cout << "  " << getSkillName(i) << ": " << modSignStr << abs(c.getSkillMod(i)) << endl;
+        string profTagStr = c.isSkillProficient(i) ? (c.isSkillExpert(i) ? "(proficient)" : "(expert)") : "";
+        cout << "  " << getSkillName(i) << ": " << modSignStr << abs(c.getSkillMod(i)) << profTagStr << "\n";
     }
 }
 
@@ -68,7 +73,7 @@ void LedgerAccessor::listCharacters(){
         return;
     }
     for (size_t i = 0; i < characters.size(); i++){
-        cout << characters[i].getName() << " (" << characters[i].getShortName() << ")" << endl;
+        cout << characters[i].getName() << " (command name: " << characters[i].getShortName() << ", level: " << characters[i].getLevel() << ")" << endl;
     }
 }
 

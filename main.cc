@@ -24,8 +24,28 @@ int main(int argc, char * argv[]){
         "constitution",
         "intelligence",
         "wisdom",
-        "charisma"
+        "charisma",
+        "acrobatics",
+        "animal_handling",
+        "arcana",
+        "athletics",
+        "deception",
+        "history",
+        "insight",
+        "intimidation",
+        "investigation"
+        "medicine",
+        "nature",
+        "perception",
+        "performance",
+        "persuasion",
+        "religion",
+        "sleight_of_hand",
+        "stealth",
+        "survival"
     };
+
+    vector<string> saveRequiredOpts = {advAndDisRequiredOpts.begin() + 1, advAndDisRequiredOpts.end() - 18};
 
     // used to check if no options were specified 
     // annoying but thats how it is
@@ -58,7 +78,8 @@ int main(int argc, char * argv[]){
         ("intelligence", po::value<string>(), "roll with an intelligence mod")
         ("wisdom", po::value<string>(), "roll with a wisdom mod")
         ("charisma", po::value<string>(), "roll with a charisma mod")
-        ("constitution", po::value<string>(), "roll with a constitution mod");
+        ("constitution", po::value<string>(), "roll with a constitution mod")
+        ("save", "roll a saving throw instead of a ability check");
     
     po::options_description skillMods("Skill Mod Rolls");
     skillMods.add_options()
@@ -108,6 +129,14 @@ int main(int argc, char * argv[]){
         }
     }
 
+    bool saveAllowed = false;
+    for (string opt : saveRequiredOpts){
+        if (vm.count(opt)){
+            saveAllowed = true;
+            break;
+        }
+    }
+
     // parsing the options
     try {
         if (vm.count("help")){
@@ -121,6 +150,12 @@ int main(int argc, char * argv[]){
         if (!advOrDisAllowed){
             if(adv_flag || dis_flag){
                 throw optionsException("You must specify a roll option with advantage or disadvantage.");
+            }
+        }
+
+        if(!saveAllowed){
+            if(vm.count("save")){
+                throw optionsException("You must specify an ability score option with saving throws.");
             }
         }
 
@@ -174,7 +209,11 @@ int main(int argc, char * argv[]){
             string optionFullName = boost::to_lower_copy(getAbilityScoreName(ab));
             replace(optionFullName.begin(), optionFullName.end(), ' ', '_');
             if (vm.count(optionFullName)){
-                characterRoller->rollAbilityCheck(ab, vm[optionFullName].as<string>(), adv_flag, dis_flag);
+                if(vm.count("save")){
+                    characterRoller->rollSave(ab, vm[optionFullName].as<string>(), adv_flag, dis_flag);
+                } else {
+                    characterRoller->rollAbilityCheck(ab, vm[optionFullName].as<string>(), adv_flag, dis_flag);
+                }
             }
         }
 

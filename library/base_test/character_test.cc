@@ -11,8 +11,8 @@ TEST(CharacterTest, DefaultConstructor) {
     EXPECT_EQ(character.getAbilityScore((ability_score)(i)), 0);
   }
   for (size_t i = 0; i < NUM_SKILLS; i++) {
-    EXPECT_FALSE(character.isProficient(i));
-    EXPECT_FALSE(character.isExpert(i));
+    EXPECT_FALSE(character.isSkillProficient(i));
+    EXPECT_FALSE(character.isSkillExpert(i));
   }
 }
 
@@ -55,7 +55,7 @@ TEST(CharacterTest, GetAbilityMod) {
 TEST(CharacterTest, GetSkillMod) {
   Character character;
   character.setAbilityScore((ability_score)(0), 16);
-  character.setProficiency(0, true);
+  character.setSkillProficiency(0, true);
   EXPECT_EQ(character.getSkillMod((skill)(0)), 5);
 }
 
@@ -79,14 +79,14 @@ TEST(CharacterTest, getMaxProficiencyBonus){
 
 TEST(CharacterTest, SetGetProficiency) {
   Character character;
-  character.setProficiency(0, true);
-  EXPECT_TRUE(character.isProficient(0));
+  character.setSkillProficiency(0, true);
+  EXPECT_TRUE(character.isSkillProficient(0));
 }
 
 TEST(CharacterTest, SetGetExpertise) {
   Character character;
-  character.setExpertise(0, true);
-  EXPECT_TRUE(character.isExpert(0));
+  character.setSkillExpertise(0, true);
+  EXPECT_TRUE(character.isSkillExpert(0));
 }
 
 TEST(CharacterTest, CheckGivenIndex) {
@@ -94,8 +94,20 @@ TEST(CharacterTest, CheckGivenIndex) {
   EXPECT_THROW(character.getAbilityScore((ability_score)(NUM_ABILITY_SCORES)), CharacterException);
   EXPECT_THROW(character.setAbilityScore((ability_score)(NUM_ABILITY_SCORES), 16), CharacterException);
   EXPECT_THROW(character.getSkillMod((skill)(NUM_SKILLS)), CharacterException);
-  EXPECT_THROW(character.setProficiency(NUM_SKILLS, true), CharacterException);
-  EXPECT_THROW(character.setExpertise(NUM_SKILLS, true), CharacterException);
+  EXPECT_THROW(character.setSkillProficiency(NUM_SKILLS, true), CharacterException);
+  EXPECT_THROW(character.setSkillExpertise(NUM_SKILLS, true), CharacterException);
+  EXPECT_THROW(character.setSaveProficiency(NUM_ABILITY_SCORES, true), CharacterException);
+}
+
+TEST(CharacterTest, GetSaveProficiency) {
+  Character character;
+  character.setSaveProficiency((ability_score)(0), true);
+  EXPECT_TRUE(character.isSaveProficient((ability_score)(0)));
+}
+
+TEST(CharacterTest, GetSaveProficiencyDefault) {
+  Character character;
+  EXPECT_FALSE(character.isSaveProficient((ability_score)(0)));
 }
 
 int main(int argc, char **argv) {

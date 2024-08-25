@@ -152,8 +152,9 @@ class Character {
 
         // functional information
         int32_t _ability_scores[NUM_ABILITY_SCORES];
-        bool _proficient_skills[18];
-        bool _expert_skills[18];
+        bool _proficient_skills[NUM_SKILLS];
+        bool _expert_skills[NUM_SKILLS];
+        bool _proficient_saves[NUM_ABILITY_SCORES];
         int _level;
 
         void checkGivenIndex(size_t index, size_t max_array_value, string array_name);
@@ -185,14 +186,18 @@ class Character {
 
         int getProficiencyBonus();
 
-        void setProficiency(size_t index, bool val);
-        bool isProficient(size_t index);
+        void setSkillProficiency(size_t index, bool val);
+        bool isSkillProficient(size_t index);
 
-        void setExpertise(size_t index, bool val);
-        bool isExpert(size_t index);
+        void setSkillExpertise(size_t index, bool val);
+        bool isSkillExpert(size_t index);
+    
+        void setSaveProficiency(size_t index, bool val);
+        bool isSaveProficient(size_t index);
 
         int getAbilityMod(ability_score ab);
         int getSkillMod(skill skill);
+        int getSaveMod(ability_score ab);
 
 };
 
