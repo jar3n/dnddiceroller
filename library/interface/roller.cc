@@ -86,6 +86,18 @@ void Roller::rollInitiative(string name, bool advantage, bool disadvantage)
     cout << result.str() << endl;
 }
 
+void Roller::rollSave(ability_score ab, string name, bool advantage, bool disadvantage)
+{
+    Character c;
+    LedgerAccessor::getCharacter(name, c);
+    string rollStr = rollCheck(c.getAbilityMod(ab), advantage, disadvantage);
+    stringstream result;
+    result << c.getName() << "'s " << getAbilityScoreName(ab) << " saving throw ";
+    result << rollStr;
+    cout << result.str() << endl;
+
+}
+
 void Roller::roll(uint32_t cap, bool disadvantage, bool advantage, uint32_t numRolls, int modifier){
     if (disadvantage && advantage){
         throw optionsException("You can't have both advantage and disadvantage at the same time.");

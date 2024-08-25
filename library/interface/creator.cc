@@ -23,6 +23,32 @@ void CharacterCreator::promptGetLine(string prompt, string error_msg, string &re
     }
 }
 
+void CharacterCreator::promptGetYesNo(string prompt, bool &response)
+{
+    uint16_t attempts = 0;
+    string input;
+    do {
+        cout << prompt;
+        getline(cin, input);
+        if (input.empty()) {
+            cout << "Please provide a response (attempts left " << PROMPT_RETRIES - attempts
+            << ")" << endl;
+        } else if (input == "yes" || input == "y") {
+            response = true;
+            break;
+        } else if (input == "no" || input == "n") {
+            response = false;
+            break;
+        } else {
+            cout << "Invalid input. Please enter 'yes' or 'no' (attempts left " << PROMPT_RETRIES - attempts << ")" << endl;
+            }
+        } while (input.empty() || (input != "yes" && input != "y" && input != "no" && input != "n") && attempts++ < PROMPT_RETRIES);
+        
+        if (input.empty() || (input != "yes" && input != "y" && input != "no" && input != "n") || attempts++ >= PROMPT_RETRIES){
+            throw create_character_exception("Did not receive a valid response. Exiting Character creator.");
+        } 
+}
+
 void CharacterCreator::promptNumber(string prompt, 
                           int32_t &response,
                           pair<int32_t,int32_t> range){
@@ -75,6 +101,24 @@ void CharacterCreator::setAbilityScoreHelper(Character *c){
     }
 }
 
+void CharacterCreator::setProficiencyHelper(Character *c)
+{
+    bool proficient;
+    for (ability_score i : ability_score_vector){
+        promptGetYesNo("Is the Character proficient at " + string(ABILITY_NAMES[i]) + " saves? (yes or no): ", proficient);
+        c->setSaveProficiency(i, proficient);
+    }
+
+    for(skill s : skill_vector){
+        promptGetYesNo("Is the Character proficient at " + string(SKILL_NAMES[s]) + "? (yes or no): ", proficient);
+        c->setSkillProficiency(s, proficient);
+        if (proficient){
+            promptGetYesNo("Is the Character an expert at " + string(SKILL_NAMES[s]) + "? (yes or no): ", proficient);
+            c->setSkillExpertise(s, proficient);
+        }
+    }
+}
+
 void CharacterCreator::setCharacterFluffHelper(Character *c){
     string response;
     personality_traits personality;
@@ -121,13 +165,16 @@ void CharacterCreator::setCharacterFluffHelper(Character *c){
 
 bool CharacterCreator::createCharacterHelper(){
     string name, short_name;
+    int level;
     Character * new_character = new Character();
     try {
         promptGetLine("Enter the Full Name for your Character: ", 
                       "Character must have a name.", name);
         promptStringNoSpaces("Enter a Short Name for your Character with no spaces: ", 
                       "Character must have a Short Name.", short_name);
+        promptNumber("Enter the level of your Character (integer): ", level, pair<int,int>(1,20));
         setAbilityScoreHelper(new_character);
+        setProficiencyHelper(new_character);
         setCharacterFluffHelper(new_character);
     } catch(ledger_exception &e){
         cout << e.what() << "\n";
@@ -140,6 +187,7 @@ bool CharacterCreator::createCharacterHelper(){
     cout << "Adding a character named: " << name << "\n";
     new_character->setName(name);
     new_character->setShortName(boost::algorithm::to_lower_copy(short_name));
+    new_character->setLevel(level);
     _createdCharacters.push_back(*new_character);
 
     return true;

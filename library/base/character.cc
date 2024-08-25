@@ -29,6 +29,7 @@ Character::Character()
 
     for (size_t i = 0; i < NUM_ABILITY_SCORES; i++){
         _ability_scores[i] = 0;
+        _proficient_saves[i] = false;
     }
     
     for (size_t i = 0; i < NUM_SKILLS; i++){
@@ -123,27 +124,38 @@ int Character::getProficiencyBonus()
     
 }
 
-void Character::setProficiency(size_t index, bool val)
+void Character::setSkillProficiency(size_t index, bool val)
 {
     checkGivenIndex(index, NUM_SKILLS, "the proficiencies.");
     _proficient_skills[index] = val;
 }
 
-bool Character::isProficient(size_t index){
+bool Character::isSkillProficient(size_t index){
     checkGivenIndex(index, NUM_SKILLS, "the proficiencies.");
     return _proficient_skills[index];
 }
 
-void Character::setExpertise(size_t index, bool val)
+void Character::setSkillExpertise(size_t index, bool val)
 {
     checkGivenIndex(index, NUM_SKILLS, "the expertise.");
     _expert_skills[index] = val;
 }
 
-bool Character::isExpert(size_t index)
+bool Character::isSkillExpert(size_t index)
 {
     checkGivenIndex(index, NUM_SKILLS, "the expertise.");
     return _expert_skills[index];
+}
+
+void Character::setSaveProficiency(size_t index, bool val)
+{
+    checkGivenIndex(index, NUM_ABILITY_SCORES, "the save proficiencies.");
+    _proficient_saves[index] = val;
+}
+
+bool Character::isSaveProficient(size_t index)
+{
+    return _proficient_saves[index];
 }
 
 int Character::getAbilityMod(ability_score ab)
@@ -191,10 +203,17 @@ int Character::getSkillMod(skill skill){
             throw CharacterException("The provded value has no associated skill.");
     }
 
-    if (isProficient(skill)) mod += getProficiencyBonus();
-    if (isExpert(skill)) mod += getProficiencyBonus();
+    if (isSkillProficient(skill)) mod += getProficiencyBonus();
+    if (isSkillExpert(skill)) mod += getProficiencyBonus();
 
     return mod;
+}
+
+int Character::getSaveMod(ability_score ab)
+{
+    int baseMod = getAbilityMod(ab);
+    if (isSaveProficient(ab)) baseMod += getProficiencyBonus();
+    return baseMod;
 }
 
 string getAbilityScoreName(ability_score ab)

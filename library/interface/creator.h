@@ -23,6 +23,7 @@ class CharacterCreator {
         vector<Character> _createdCharacters;
 
         void promptGetLine(string prompt, string error_msg, string &response);
+        void promptGetYesNo(string prompt,  bool &response);
         void promptNumber(string prompt, 
                       int32_t &response,
                       pair<int32_t,int32_t> range = pair<int32_t,int32_t>(INT32_MIN, INT32_MAX)); 
@@ -32,6 +33,7 @@ class CharacterCreator {
         // creating character helper functions
         void setCharacterFluffHelper(Character *c);
         void setAbilityScoreHelper(Character *c);
+        void setProficiencyHelper(Character *c);
         bool createCharacterHelper();
         
         void addCharactersToLedger();

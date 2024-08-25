@@ -55,8 +55,13 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
 
     for(ability_score i : ability_score_vector){
         character.setAbilityScore(i, ledger_character.ability_scores(i));
+        character.setSaveProficiency(i, ledger_character.save_proficiencies(i));
     }
 
+    for(skill i : skill_vector){
+        character.setSkillProficiency(i, ledger_character.skill_proficiencies(i));
+        character.setSkillExpertise(i, ledger_character.skill_expertise(i));
+    }
     character.setBackstory(ledger_character.backstory());
 
 }
@@ -123,6 +128,12 @@ void ledger::addCharacter(Character c)
 
     for(ability_score i : ability_score_vector){
         lc.add_ability_scores(c.getAbilityScore(i));
+        lc.add_save_proficiencies(c.isSaveProficient(i));
+    }
+
+    for(skill s : skill_vector){
+        lc.add_skill_proficiencies(c.isSkillProficient(s));
+        lc.add_skill_expertise(c.isSkillExpert(s));
     }
 
     // write the character to the file

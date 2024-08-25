@@ -35,6 +35,7 @@ class Roller : public LedgerAccessor {
         void rollAbilityCheck(ability_score ab, string name, bool advantage, bool disadvantage);
         void rollSkillCheck(skill skill, string name, bool advantage, bool disadvantage);
         void rollInitiative(string name, bool advantage, bool disadvantage);
+        void rollSave(ability_score ab, string name, bool advantage, bool disadvantage);
 };
 
 #endif
