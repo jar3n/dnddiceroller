@@ -1,5 +1,5 @@
 # DND Dice Roller for DND 5e
-Born out of a desire to undercut DNDBeyond and its paywalls, this is a command line application used for playing dnd. The ultimate goal is to do all the core functions of DND and be flexible for adding items and custom abilities.
+Born out of a desire to provide an alternative to DNDBeyond, this is a command line application used for playing dnd. The ultimate goal is to do all the core functions of DND and be flexible for adding items and custom abilities.
 
 ## Background
 DNDBeyond puts a lot of content behind paywalls and for main stories that is fine. However, paywalling class features and certain items is annoying and unfairly limits the creativity you can have when making a character. Initially, I decided to go old school and use a pdf character sheet, but I often forgot all the modifers I need to apply to my character for various rolls. So I tried google's roll dice feature, but that was very limited. Now we are here.
@@ -29,10 +29,10 @@ To roll a dice:
 `dnddice -r <max value>`
 
 To roll with a modifier:
-`dnddice --roll <max value> --modifier <modifier value>` OR `dnddice -r <max value> -m <modifier value>`
+`dnddice --roll <max value> --modifier <modifier value>`
 
 To roll with advantage:
-`dnddice --roll <max value> --advantage` OR `dnddice -r <max value> -A`
+`dnddice --roll <max value> --advantage`
 
 To roll with disadvantage:
-`dnddice --roll <max value> --disadvantage` OR  `dnddice -r <max value> -D` 
+`dnddice --roll <max value> --disadvantage`
