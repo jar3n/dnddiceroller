@@ -105,8 +105,8 @@ int main(int argc, char * argv[]){
     po::options_description combatRolls("Combat Rolls");
     combatRolls.add_options()
         ("initiative", po::value<string>(), "roll initiative")
-        ("inspiration", "use inspiration")
-        ("retrive_inspiration", "retrive inspiration")
+        ("inspiration", "get inspiration")
+        ("use_inspiration", "use inspiration")
         ("modify_inspiration", "modify inspiration");
 
     
@@ -232,6 +232,17 @@ int main(int argc, char * argv[]){
             characterRoller->rollInitiative(vm["initiative"].as<string>(), adv_flag, dis_flag);
         }
 
+        if (vm.count("inspiration")){
+            std::cout << "Not yet implemented! Inspiration not implemented yet." << std::endl;
+        }
+
+        if (vm.count("use_inspiration")){
+            std::cout << "Not yet implemented! Use Inspiration not implemented yet." << std::endl;
+        }
+
+        if (vm.count("modify_inspiration")){
+            std::cout << "Not yet implemented! Modify Inspiration not implemented yet." << std::endl;
+        }
         delete characterRoller;
         
     } catch (optionsException &e){
