@@ -104,7 +104,10 @@ int main(int argc, char * argv[]){
     
     po::options_description combatRolls("Combat Rolls");
     combatRolls.add_options()
-        ("initiative", po::value<string>(), "roll initiative");
+        ("initiative", po::value<string>(), "roll initiative")
+        ("inspiration", "use inspiration")
+        ("retrive_inspiration", "retrive inspiration")
+        ("modify_inspiration", "modify inspiration");
 
     
     po::options_description characterRollOpsDesc("Character Roll Options");
