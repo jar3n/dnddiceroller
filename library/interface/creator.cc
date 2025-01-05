@@ -119,6 +119,24 @@ void CharacterCreator::setProficiencyHelper(Character *c)
     }
 }
 
+void CharacterCreator::setClassHelper(Character *c)
+{
+    // generating the prompt for the character class
+    // it will print a list of 
+    // classes and associated numbers
+    // then prompt the user for a number 
+    std::string classPrompt = "";
+    int count = 0;
+    for (character_class i : character_class_vector){
+        classPrompt += string(CHARACTER_CLASS[i]) + ": " + std::to_string(count) + "\n";
+        count++;
+    }
+    classPrompt += "Type the number associated with the desired class: ";
+    int class_int;
+    promptNumber(classPrompt, class_int, pair<int,int>(0, count));
+    c->setClass(character_class_vector[class_int]);
+}
+
 void CharacterCreator::setCharacterFluffHelper(Character *c){
     string response;
     personality_traits personality;
@@ -176,6 +194,7 @@ bool CharacterCreator::createCharacterHelper(){
         setAbilityScoreHelper(new_character);
         setProficiencyHelper(new_character);
         setCharacterFluffHelper(new_character);
+        setClassHelper(new_character);
     } catch(ledger_exception &e){
         cout << e.what() << "\n";
         return false;

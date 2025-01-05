@@ -34,6 +34,7 @@ class CharacterCreator {
         void setCharacterFluffHelper(Character *c);
         void setAbilityScoreHelper(Character *c);
         void setProficiencyHelper(Character *c);
+        void setClassHelper(Character *c);
         bool createCharacterHelper();
         
         void addCharactersToLedger();

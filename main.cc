@@ -186,6 +186,7 @@ int main(int argc, char * argv[]){
             access->getCharacterPersonality(name);
             access->getAlignment(name);
             access->getCharacterBackstory(name);
+            access->getCharacterClass(name);
         } 
         if(vm.count("delete")){
             string name = vm["delete"].as<string>();

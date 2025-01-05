@@ -47,6 +47,13 @@ void LedgerAccessor::getAlignment(string name){
     cout << c.getName() << "'s Alignment is " << c.getPersonalityTraits().alignment << ".\n";
 }
 
+void LedgerAccessor::getCharacterClass(string name)
+{
+    Character c;
+    getCharacter(name, c);
+    cout << c.getName() << "'s Class is " << c.getClassStr() << ".\n";
+}
+
 void LedgerAccessor::getCharacterBackstory(string name){
     Character c;
     getCharacter(name, c);
