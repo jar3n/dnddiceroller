@@ -73,4 +73,8 @@ message character{
     repeated bool skill_proficiencies = 7;
     repeated bool skill_expertise = 8;
     repeated bool save_proficiencies = 9;
+
+    // forgot to add a level
+    // field in here
+    optional int32 level = 10;
 }

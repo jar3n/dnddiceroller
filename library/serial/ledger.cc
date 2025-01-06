@@ -63,6 +63,7 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
         character.setSkillExpertise(i, ledger_character.skill_expertise(i));
     }
     character.setBackstory(ledger_character.backstory());
+    character.setLevel(ledger_character.level());
 
 }
 
@@ -108,6 +109,7 @@ void ledger::addCharacter(Character c)
     lc.set_name(c.getName());
     lc.set_short_name(c.getShortName());
     lc.set_backstory(c.getBackstory());
+    lc.set_level(c.getLevel());
     
     dnd::personality_traits * p = lc.mutable_personality();
     personality_traits pc = c.getPersonalityTraits();
