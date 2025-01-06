@@ -64,6 +64,8 @@ void ledger::convertLedgerCharactertoCharacter(dnd::character& ledger_character,
     }
     character.setBackstory(ledger_character.backstory());
 
+    character.setClass(character_class(ledger_character.character_class()));
+
 }
 
 string ledger::createCharacterFile(string name){
@@ -125,6 +127,8 @@ void ledger::addCharacter(Character c)
     ph->set_height(phc.height);
     ph->set_weight(phc.weight);
     ph->set_skin_tone(phc.skin_tone);
+
+    lc.set_character_class(dnd::Class(c.getClass()));
 
     for(ability_score i : ability_score_vector){
         lc.add_ability_scores(c.getAbilityScore(i));

@@ -18,6 +18,7 @@ class LedgerAccessor {
         void getCharacterBackstory(string name);
         void getCharacterPhysicalTraits(string name);
         void getAlignment(string name);
+        void getCharacterClass(string name);
         void listCharacters();
         void deleteCharacter(string name);
 

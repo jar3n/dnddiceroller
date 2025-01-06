@@ -36,6 +36,23 @@ using namespace std;
     "Survival" \
 })
 
+#define CHARACTER_CLASS ((const char *[]){\
+    "Artificer", \
+    "Barbarian", \
+    "Bard", \
+    "Blood Hunter", \
+    "Cleric", \
+    "Druid", \
+    "Fighter", \
+    "Monk", \
+    "Paladin", \
+    "Ranger", \
+    "Rogue", \
+    "Sorcerer", \
+    "Warlock", \
+    "Wizard" \
+})
+
 
 #define MIN_LEVEL 1
 #define MAX_LEVEL 20
@@ -108,6 +125,40 @@ const skill skill_vector[] = {
     SURVIVAL
 };
 
+enum character_class {
+    ARTIFICER = 0,
+    BARBARIAN = 1,
+    BARD = 2,
+    BLOOD_HUNTER = 3,
+    CLERIC = 4,
+    DRUID = 5,
+    FIGHTER = 6,
+    MONK = 7,
+    PALADIN = 8,
+    RANGER = 9,
+    ROGUE = 10,
+    SORCERER = 11,
+    WARLOCK = 12,
+    WIZARD = 13
+};
+
+const character_class character_class_vector[] = {
+    ARTIFICER,
+    BARBARIAN,
+    BARD,
+    BLOOD_HUNTER,
+    CLERIC,
+    DRUID,
+    FIGHTER,
+    MONK,
+    PALADIN,
+    RANGER,
+    ROGUE,
+    SORCERER,
+    WARLOCK,
+    WIZARD
+};
+
 string getAbilityScoreName(ability_score ab);
 string getSkillName(skill skill);
 
@@ -156,6 +207,7 @@ class Character {
         bool _expert_skills[NUM_SKILLS];
         bool _proficient_saves[NUM_ABILITY_SCORES];
         int _level;
+        character_class _char_class;
 
         void checkGivenIndex(size_t index, size_t max_array_value, string array_name);
 
@@ -184,6 +236,10 @@ class Character {
         void setLevel(int level);
         int getLevel();
 
+        void setClass(character_class c);
+        int getClass();
+        string getClassStr();
+
         int getProficiencyBonus();
 
         void setSkillProficiency(size_t index, bool val);
@@ -198,6 +254,8 @@ class Character {
         int getAbilityMod(ability_score ab);
         int getSkillMod(skill skill);
         int getSaveMod(ability_score ab);
+
+
 
 };
 

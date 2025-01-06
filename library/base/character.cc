@@ -115,6 +115,21 @@ int Character::getLevel()
     return _level;
 }
 
+void Character::setClass(character_class c)
+{
+    _char_class = c;
+}
+
+int Character::getClass()
+{
+    return _char_class;
+}
+
+string Character::getClassStr()
+{
+    return CHARACTER_CLASS[_char_class];
+}
+
 int Character::getProficiencyBonus()
 {
     AltRangeConverter *rc = new AltRangeConverter(0, 4);
