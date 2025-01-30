@@ -20,6 +20,8 @@ class LedgerAccessor {
         void getAlignment(string name);
         void listCharacters();
         void deleteCharacter(string name);
+        void getInspiration(string name);
+        void modifyinspiration(string name, int amount);
 
         LedgerAccessor();
         ~LedgerAccessor();

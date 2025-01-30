@@ -194,7 +194,7 @@ int main(int argc, char * argv[]){
             string name = vm["delete"].as<string>();
             access->deleteCharacter(name);
         }
-        delete access;
+        
 
         Roller * characterRoller = new Roller();
         if (vm.count("roll")){
@@ -233,16 +233,21 @@ int main(int argc, char * argv[]){
         }
 
         if (vm.count("inspiration")){
-            std::cout << "Not yet implemented! Inspiration not implemented yet." << std::endl;
+            string name = vm["inspiration"].as<string>();
+            access->getInspiration(name);
+
         }
 
         if (vm.count("use_inspiration")){
-            std::cout << "Not yet implemented! Use Inspiration not implemented yet." << std::endl;
+            string name = vm["use_inspiration"].as<string>();
+            access->modifyinspiration(name, -1);
         }
 
         if (vm.count("modify_inspiration")){
+
             std::cout << "Not yet implemented! Modify Inspiration not implemented yet." << std::endl;
         }
+        delete access;
         delete characterRoller;
         
     } catch (optionsException &e){

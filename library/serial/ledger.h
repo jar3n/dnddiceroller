@@ -7,6 +7,7 @@
 #include <exception>
 #include <climits>
 #include "character.h"
+// modify ledger character function to get inpiration
 
 using namespace std;
 
@@ -35,7 +36,7 @@ class ledger {
         
         // void writeToLedger();
         void convertLedgerCharactertoCharacter(dnd::character &ledger_character, 
-                                               Character &character);
+                                               Character &character); 
 
         string createCharacterFile(string name);
         string getCharacterFile(string name);

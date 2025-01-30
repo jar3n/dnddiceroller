@@ -1,4 +1,5 @@
 #include "character.h"
+// add line to make inspiration 0 when character is created DONE
 
 void Character::checkGivenIndex(size_t index, size_t max_array_value, string array_name)
 {
@@ -38,6 +39,7 @@ Character::Character()
     }
 
     _level = 1;
+    _inspiration = 0;
 }
 
 Character::~Character()
@@ -113,6 +115,16 @@ void Character::setLevel(int level)
 int Character::getLevel()
 {
     return _level;
+}
+
+void Character::setInspiration(int inspiration)
+{
+    _inspiration = inspiration;
+}
+
+int Character::getInspiration()
+{
+    return _inspiration;
 }
 
 int Character::getProficiencyBonus()

@@ -1,6 +1,7 @@
 #ifndef _CREATOR_H_
 #define _CREATOR_H_
 
+
 #include <boost/algorithm/string.hpp>
 #include <vector>
 #include "character.h"
@@ -34,6 +35,7 @@ class CharacterCreator {
         void setCharacterFluffHelper(Character *c);
         void setAbilityScoreHelper(Character *c);
         void setProficiencyHelper(Character *c);
+    
         bool createCharacterHelper();
         
         void addCharactersToLedger();
