@@ -104,7 +104,10 @@ int main(int argc, char * argv[]){
     
     po::options_description combatRolls("Combat Rolls");
     combatRolls.add_options()
-        ("initiative", po::value<string>(), "roll initiative");
+        ("initiative", po::value<string>(), "roll initiative")
+        ("inspiration", "get inspiration")
+        ("use_inspiration", "use inspiration")
+        ("modify_inspiration", "modify inspiration");
 
     
     po::options_description characterRollOpsDesc("Character Roll Options");
@@ -191,7 +194,7 @@ int main(int argc, char * argv[]){
             string name = vm["delete"].as<string>();
             access->deleteCharacter(name);
         }
-        delete access;
+        
 
         Roller * characterRoller = new Roller();
         if (vm.count("roll")){
@@ -229,6 +232,22 @@ int main(int argc, char * argv[]){
             characterRoller->rollInitiative(vm["initiative"].as<string>(), adv_flag, dis_flag);
         }
 
+        if (vm.count("inspiration")){
+            string name = vm["inspiration"].as<string>();
+            access->getInspiration(name);
+
+        }
+
+        if (vm.count("use_inspiration")){
+            string name = vm["use_inspiration"].as<string>();
+            access->modifyinspiration(name, -1);
+        }
+
+        if (vm.count("add_inspiration")){
+            string name = vm["add_inspiration"].as<string>();
+            access->modifyinspiration(name, 1);
+        }
+        delete access;
         delete characterRoller;
         
     } catch (optionsException &e){

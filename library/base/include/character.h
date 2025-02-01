@@ -5,7 +5,7 @@
 #include <string>
 
 #include "range.h"
-
+// need a function that gets inspiration from character
 using namespace std;
 
 #define ABILITY_NAMES ((const char *[]){"Strength", \
@@ -156,6 +156,7 @@ class Character {
         bool _expert_skills[NUM_SKILLS];
         bool _proficient_saves[NUM_ABILITY_SCORES];
         int _level;
+        int _inspiration;
 
         void checkGivenIndex(size_t index, size_t max_array_value, string array_name);
 
@@ -182,7 +183,10 @@ class Character {
         string getBackstory();
 
         void setLevel(int level);
-        int getLevel();
+        int getLevel(); // example of what to do with get_inspiration
+
+        void setInspiration(int inspiration);
+        int getInspiration();
 
         int getProficiencyBonus();
 

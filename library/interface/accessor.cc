@@ -1,4 +1,5 @@
 #include "accessor.h"
+// add new function for getting character inspiration. add function header in accessor.h
 
 void LedgerAccessor::getCharacter(string name, Character &c)
 {
@@ -80,6 +81,18 @@ void LedgerAccessor::listCharacters(){
 void LedgerAccessor::deleteCharacter(string name)
 {
     _characterLedger->deleteCharacter(name);
+}
+
+void LedgerAccessor::getInspiration(string name){
+    Character c;
+    getCharacter(name, c);
+    cout << c.getName() << "'s Inspiration: " << c.getInspiration() << endl;
+}
+
+void LedgerAccessor::modifyinspiration(string name, int amount){
+    Character c;
+    getCharacter(name, c);
+    c.setInspiration(c.getInspiration() + amount);
 }
 
 LedgerAccessor::LedgerAccessor()

@@ -1,4 +1,5 @@
 syntax = "proto2";
+// Add inspiration to character in protobuf
 
 package dnd;
 
@@ -22,6 +23,7 @@ message personality_traits{
 }
 
 message character{
+    
     // for now KISS and characters are just names
     // soon add other attributes of characters
     optional string name = 1;
@@ -73,4 +75,8 @@ message character{
     repeated bool skill_proficiencies = 7;
     repeated bool skill_expertise = 8;
     repeated bool save_proficiencies = 9;
+
+    //storing inspiration
+    optional int32 inspiration = 10;
+    
 }
